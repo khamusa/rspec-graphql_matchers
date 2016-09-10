@@ -17,6 +17,10 @@ module RSpec
         "but it was '#{sample.type}'"
       end
 
+      def description
+        "be of type '#{expected}'"
+      end
+
       private
 
       def field_name(field)

@@ -41,7 +41,7 @@ describe 'expect(a_field).to be_of_type(graphql_type)' do
 
             before { matcher.matches?(field) }
 
-            it 'informs the expected and actual all_types' do
+            it 'informs the expected and actual types' do
               expect(failure_message).to end_with(
                 "to be of type '#{expected_type}', but it was '#{field.type}'")
             end
@@ -64,6 +64,15 @@ describe 'expect(a_field).to be_of_type(graphql_type)' do
           end
         end
       end
+    end
+  end
+
+  describe '#description' do
+    let(:matcher) { be_of_type(String) }
+
+    it %q{is "be of type 'String'"} do
+      matcher.matches?(double(type: 'NotMeaningful'))
+      expect(matcher.description).to eq("be of type 'String'")
     end
   end
 end
