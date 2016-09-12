@@ -1,6 +1,6 @@
 # Rspec::GraphqlMatchers
 
-Convenient rspec matchers for testing your (GraphQL)[https://github.com/rmosolgo/graphql-ruby] API/Schema.
+Convenient rspec matchers for testing your [graphql-ruby](https://github.com/rmosolgo/graphql-ruby) API/Schema.
 
 ## Installation
 
@@ -10,17 +10,19 @@ gem 'rspec-graphql_matchers'
 
 ## Usage
 
-The two matchers currently supported are:
-   - be_of_type(a_graphql_type_identifier)
-   - accept_arguments(hash_of_arg_names_and_type_identifiers)
+The matchers currently supported are:
+   - `expect(graphql_type).to have_a_field(field_name).that_returns(valid_type)`
+   - `expect(graphql_field).to be_of_type(valid_type)`
+   - `expect(graphql_field).to accept_arguments(hash_of_arg_names_and_valid_types)`
 
-Where a type identifier is either:
-   - A GraphQL type object (ex: `types.String`, `!types.Int`, `types[types.Int]`)
+Where a valid type for the expectation is either:
+   - A `GraphQL::ObjectType` object (ex: `types.String`, `!types.Int`, `types[types.Int]`, or your own)
    - A String representation of a type: `"String!"`, `"Int!"`, `"[String]!"`
+   (note the exclamation mark at the end, as required by the [GraphQL specs](http://graphql.org/).
 
 ## Examples
 
-Given a GraphQL type defined as such
+Given a `GraphQL::ObjectType` defined as
 
 ```ruby
 
@@ -41,17 +43,26 @@ PostType = GraphQL::ObjectType.define do
 end
 ```
 
-### 1) Test the field types with `be_of_type` matcher:
+### 1) Test your type defines the correct fields:
+
+```ruby
+describe PostType do
+  it 'defines a field id of type ID!' do
+    expect(subject).to have_a_field(:id).that_returns(!types.ID)
+  end
+
+  # Alternatives for better fluency
+  it { is_expected.to have_a_field(:id).of_type("ID!") }
+end
+```
+### 2) Test a specific field type with `be_of_type` matcher:
 
 ```ruby
 describe PostType do
   describe 'id' do
     subject { PostType.fields['id'] }
 
-    # These will match
     it { is_expected.to be_of_type('ID!') }
-
-    # While 'Float!' will not match
     it { is_expected.not_to be_of_type('Float!') }
   end
 
@@ -74,10 +85,9 @@ type name (`Post`) and not the constant name (`PostType`).
 
 Using your type objects directly has the advantage that if you
 decide to rename the type your specs won't break, as they would had you
-hardcoded the type name as a String.
+hardcoded it as a String.
 
-You can also use the built-in GraphQL scalar types:
-
+You can also use the built-in [graphql-ruby](https://github.com/rmosolgo/graphql-ruby) scalar types:
 
 ```ruby
 # ensure you have the GraphQL type definer available in your tests
@@ -94,14 +104,10 @@ end
 
 Having to define `types` everywhere is quite annoying. If you prefer, you can
 just `include RSpec::GraphqlMatchers::TypesHelper` once 
-(for example in your `spec_helper.rb`, but not within a `RSpec.configure` block)
-and the `types` shortcut will be available globally (ouch!) for your tests.
-Use at your own risk.
+(for example in your `spec_helper.rb`)
+and the `types` shortcut will be available within the include context.
 
-### 2) Test the arguments accepted by a field with `accept_arguments` matcher:
-
-Testing arguments use the `accept_arguments` matcher passing a hash where
-keys represent the attribute name and values respresent the attribute type.
+### 3) Test the arguments accepted by a field with `accept_arguments` matcher:
 
 ```ruby
 describe PostType do
@@ -121,11 +127,11 @@ describe PostType do
   end
 end
 ```
-The spec will pass only if all attributes/types specified in the hash are
-defined on the field. Type specification follows the same rules from
-`be_of_type` matcher.
 
-For better fluency, `accept_arguments` is always available in singular form, as
+The spec will only pass if all attributes/types specified in the hash are
+defined on the field.
+
+For better fluency, `accept_arguments` is also available in singular form, as
 `accept_argument`.
 
 ## TODO

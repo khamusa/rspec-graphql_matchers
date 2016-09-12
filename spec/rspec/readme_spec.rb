@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'pry'
-require 'graphql'
 
 describe 'The readme Examples' do
   ruby_code_regex = /```ruby(.*?)```/m
