@@ -1,7 +1,5 @@
 ---
 engines:
-  bundler-audit:
-    enabled: true
   duplication:
     enabled: true
     config:
@@ -16,7 +14,6 @@ engines:
     enabled: true
 ratings:
   paths:
-  - Gemfile.lock
   - "**.inc"
   - "**.js"
   - "**.jsx"
@@ -25,6 +22,7 @@ ratings:
   - "**.py"
   - "**.rb"
 exclude_paths:
+- Gemfile.lock
 - spec/
 - rspec-graphql_matchers.gemspec
 - bin/
