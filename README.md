@@ -128,6 +128,12 @@ defined on the field. Type specification follows the same rules from
 For better fluency, `accept_arguments` is always available in singular form, as
 `accept_argument`.
 
+## TODO
+
+  - Setup CI and integrate w/codeclimate
+  - Setup codeclimate / CI badges
+  - New matchers!
+
 ## Contributing
 
   - Send Bug reports, suggestions or any general
