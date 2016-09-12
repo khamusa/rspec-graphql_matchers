@@ -10,6 +10,9 @@ Style/MultilineMethodCallIndentation:
 Style/AlignParameters:
   EnforcedStyle: with_fixed_indentation
 
+Style/ClassAndModuleChildren:
+  Enabled: false
+
 Style/SpaceBeforeFirstArg:
   Include:
     - db/migrate/*.rb
