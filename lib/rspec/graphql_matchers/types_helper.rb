@@ -1,3 +1,5 @@
+require 'graphql'
+
 module RSpec
   module GraphqlMatchers
     module TypesHelper

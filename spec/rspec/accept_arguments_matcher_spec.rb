@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'graphql'
 
 describe 'expect(a_field).to accept_arguments(arg_name: arg_type, ...)' do
   subject(:field) do

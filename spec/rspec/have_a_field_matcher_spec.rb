@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'graphql'
 
 module RSpec::GraphqlMatchers
   describe 'expect(a_type).to have_a_field(field_name).that_returns(a_type)' do
