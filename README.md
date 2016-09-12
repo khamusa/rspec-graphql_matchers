@@ -48,11 +48,12 @@ end
 ```ruby
 describe PostType do
   it 'defines a field id of type ID!' do
-    expect(subject).to have_a_field(:id).that_returns(!types.ID)
+    expect(subject).to have_field(:id).that_returns(!types.ID)
   end
 
-  # Alternatives for better fluency
-  it { is_expected.to have_a_field(:id).of_type("ID!") }
+  # Fluent alternatives
+  it { is_expected.to have_field(:id).of_type("ID!") }
+  it { is_expected.to have_a_field(:id).returning("ID!") }
 end
 ```
 ### 2) Test a specific field type with `be_of_type` matcher:

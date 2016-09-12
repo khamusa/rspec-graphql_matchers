@@ -12,12 +12,12 @@ module RSpec
     def accept_arguments(expected_args)
       RSpec::GraphqlMatchers::AcceptArguments.new(expected_args)
     end
+    alias accept_argument accept_arguments
 
     # rubocop:disable Style/PredicateName
     def have_a_field(field_name)
       RSpec::GraphqlMatchers::HaveAField.new(field_name)
     end
-
-    alias accept_argument accept_arguments
+    alias have_field have_a_field
   end
 end
