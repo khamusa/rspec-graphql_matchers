@@ -92,6 +92,12 @@ describe PostType do
 end
 ```
 
+Having to define `types` everywhere is quite annoying. If you prefer, you can
+just `include RSpec::GraphqlMatchers::TypesHelper` once 
+(for example in your `spec_helper.rb`, but not within a `RSpec.configure` block)
+and the `types` shortcut will be available globally (ouch!) for your tests.
+Use at your own risk.
+
 ### 2) Test the arguments accepted by a field with `accept_arguments` matcher:
 
 Testing arguments use the `accept_arguments` matcher passing a hash where

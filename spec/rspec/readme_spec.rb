@@ -11,7 +11,6 @@ describe 'The readme Examples' do
     )
   )
 
-  types = GraphQL::Define::TypeDefiner.instance
   readme_content.scan(ruby_code_regex) do |ruby_code|
     eval(ruby_code[0])
   end

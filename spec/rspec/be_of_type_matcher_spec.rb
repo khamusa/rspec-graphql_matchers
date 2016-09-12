@@ -1,8 +1,6 @@
 require 'spec_helper'
 require 'graphql'
 
-types = GraphQL::Define::TypeDefiner.instance
-
 describe 'expect(a_field).to be_of_type(graphql_type)' do
   scalar_types = [types.Boolean, types.Int, types.Float, types.String, types.ID]
   list_types   = scalar_types.map { |t| types[t] }
