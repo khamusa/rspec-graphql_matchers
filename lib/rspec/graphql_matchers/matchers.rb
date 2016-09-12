@@ -13,6 +13,7 @@ module RSpec
       RSpec::GraphqlMatchers::AcceptArguments.new(expected_args)
     end
 
+    # rubocop:disable Style/PredicateName
     def have_a_field(field_name)
       RSpec::GraphqlMatchers::HaveAField.new(field_name)
     end
