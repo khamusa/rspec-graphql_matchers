@@ -11,5 +11,7 @@ module RSpec
     def accept_arguments(expected_args)
       RSpec::GraphqlMatchers::AcceptArguments.new(expected_args)
     end
+
+    alias accept_argument accept_arguments
   end
 end

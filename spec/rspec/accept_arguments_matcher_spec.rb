@@ -13,6 +13,12 @@ describe 'expect(a_field).to accept_arguments(arg_name: arg_type, ...)' do
 
   let(:actual_args) { {} }
 
+  it 'can also be used in singular form' do
+    expect do
+      expect(field).to accept_argument(actual_args)
+    end.not_to raise_error
+  end
+
   describe '#matches?' do
     context 'when expecting a single argument with type' do
       let(:expected_args) { { id: types.String } }
