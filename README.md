@@ -34,6 +34,9 @@ PostType = GraphQL::ObjectType.define do
 
   field :subposts, PostType do
     type !PostType
+
+    argument :filter, types.String
+    argument :id, types.ID
   end
 end
 ```
