@@ -1,6 +1,3 @@
-Exclude:
-  - '*.gemspec'
-
 Style/Documentation:
   Enabled: false
 
