@@ -5,7 +5,7 @@ Convenient rspec matchers for testing your (GraphQL)[https://github.com/rmosolgo
 ## Installation
 
 ```
-gem 'rspec-graphql_matchers', git: 'https://github.com/khamusa/rspec-graphql_matchers'
+gem 'rspec-graphql_matchers'
 ```
 
 ## Usage
