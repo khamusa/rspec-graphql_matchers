@@ -2,6 +2,7 @@ require 'rspec/matchers'
 require 'rspec/graphql_matchers/be_of_type'
 require 'rspec/graphql_matchers/accept_arguments'
 require 'rspec/graphql_matchers/have_a_field'
+require 'rspec/graphql_matchers/have_an_input_field'
 
 module RSpec
   module Matchers
@@ -19,5 +20,11 @@ module RSpec
       RSpec::GraphqlMatchers::HaveAField.new(field_name)
     end
     alias have_field have_a_field
+
+    # rubocop:disable Style/PredicateName
+    def have_an_input_field(field_name)
+      RSpec::GraphqlMatchers::HaveAnInputField.new(field_name)
+    end
+    alias have_input_field have_an_input_field
   end
 end
