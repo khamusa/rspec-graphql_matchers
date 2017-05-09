@@ -6,17 +6,13 @@ module RSpec
       def initialize(expected_field_name)
         @expected_field_name = expected_field_name.to_s
         @expected_field_type = @graph_object = nil
+        @fields = :fields
       end
 
       def matches?(graph_object)
         @graph_object = graph_object
 
-        unless @graph_object.respond_to?(:fields)
-          raise "Invalid object #{@graph_object} provided to have_a_field " \
-            'matcher. It does not seem to be a valid GraphQL object type.'
-        end
-
-        @actual_field = @graph_object.fields[@expected_field_name]
+        @actual_field = field_collection[@expected_field_name]
         valid_field? && types_match?(@actual_field.type, @expected_field_type)
       end
 
@@ -65,6 +61,25 @@ module RSpec
 
       def describe_obj(field)
         field.respond_to?(:name) && field.name || field.inspect
+      end
+
+      def field_collection
+        if @graph_object.respond_to?(@fields)
+          @graph_object.public_send(@fields)
+        else
+          raise "Invalid object #{@graph_object} provided to #{matcher_name} " \
+            'matcher. It does not seem to be a valid GraphQL object type.'
+        end
+      end
+
+      def matcher_name
+        klass = self.class.to_s.split('::').last
+
+        # Copied these from: https://github.com/rails/rails/blob/v4.2.7.1/activesupport/lib/active_support/inflector/methods.rb#L95-L96
+        klass.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')
+        klass.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
+
+        klass.downcase!
       end
     end
   end
