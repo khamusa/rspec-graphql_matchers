@@ -3,10 +3,10 @@ require_relative 'base_matcher'
 module RSpec
   module GraphqlMatchers
     class HaveAField < BaseMatcher
-      def initialize(expected_field_name)
+      def initialize(expected_field_name, fields = :fields)
         @expected_field_name = expected_field_name.to_s
         @expected_field_type = @graph_object = nil
-        @fields = :fields
+        @fields = fields.to_sym
       end
 
       def matches?(graph_object)
@@ -73,13 +73,11 @@ module RSpec
       end
 
       def matcher_name
-        klass = self.class.to_s.split('::').last
-
-        # Copied these from: https://github.com/rails/rails/blob/v4.2.7.1/activesupport/lib/active_support/inflector/methods.rb#L95-L96
-        klass.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')
-        klass.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
-
-        klass.downcase!
+        case @fields
+        when :fields        then 'have_a_field'
+        when :input_fields  then 'have_an_input_field'
+        when :return_fields then 'have_a_return_field'
+        end
       end
     end
   end
