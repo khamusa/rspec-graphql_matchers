@@ -11,9 +11,12 @@ gem 'rspec-graphql_matchers'
 ## Usage
 
 The matchers currently supported are:
-   - `expect(graphql_type).to have_a_field(field_name).that_returns(valid_type)`
-   - `expect(graphql_field).to be_of_type(valid_type)`
-   - `expect(graphql_field).to accept_arguments(hash_of_arg_names_and_valid_types)`
+   - `expect(a_graphql_object).to have_a_field(field_name).that_returns(valid_type)`
+   - `expect(a_mutation_type).to have_a_return_field(field_name).returning(valid_type)`
+   - `expect(a_mutation_type).to have_an_input_field(field_name).of_type(valid_type)`
+   - `expect(a_field).to be_of_type(valid_type)`
+   - `expect(an_input).to accept_arguments(hash_of_arg_names_and_valid_types)`
+   - `expect(an_input).to accept_arguments(hash_of_arg_names_and_valid_types)`
 
 Where a valid type for the expectation is either:
    - A `GraphQL::ObjectType` object (ex: `types.String`, `!types.Int`, `types[types.Int]`, or your own)
@@ -137,8 +140,6 @@ For better fluency, `accept_arguments` is also available in singular form, as
 
 ## TODO
 
-  - Setup CI and integrate w/codeclimate
-  - Setup codeclimate / CI badges
   - New matchers!
 
 ## Contributing

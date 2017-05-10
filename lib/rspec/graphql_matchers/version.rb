@@ -1,5 +1,5 @@
 module Rspec
   module GraphqlMatchers
-    VERSION = '0.3.1'.freeze
+    VERSION = '0.5'.freeze
   end
 end
