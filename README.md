@@ -12,7 +12,7 @@ gem 'rspec-graphql_matchers'
 
 The matchers currently supported are:
    - `expect(a_graphql_object).to have_a_field(field_name).that_returns(valid_type)`
-   - `expect(a_graphql_object).to interface(interface_name, ...)`
+   - `expect(a_graphql_object).to implement(interface_name, ...)`
    - `expect(a_mutation_type).to have_a_return_field(field_name).returning(valid_type)`
    - `expect(a_mutation_type).to have_an_input_field(field_name).of_type(valid_type)`
    - `expect(a_field).to be_of_type(valid_type)`
@@ -134,7 +134,7 @@ end
 
 ```ruby
 describe PostType do
-  it 'interfaces Node' do
+  it 'implements interface Node' do
     expect(subject).to implement('Node')
   end
 
