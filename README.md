@@ -130,17 +130,17 @@ describe PostType do
 end
 ```
 
-### 4) Test an object's interfaces:
+### 4) Test an object's interface implementations:
 
 ```ruby
 describe PostType do
   it 'interfaces Node' do
-    expect(subject).to interface('Node')
+    expect(subject).to implement('Node')
   end
 
   # Accepts arguments as an array and type objects directly
-  it { is_expected.to interface(GraphQL::Relay::Node.interface) }
-  it { is_expected.not_to interface('OtherInterface') }
+  it { is_expected.to implement(GraphQL::Relay::Node.interface) }
+  it { is_expected.not_to implement('OtherInterface') }
 end
 ```
 

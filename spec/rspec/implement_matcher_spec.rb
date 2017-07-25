@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module RSpec::GraphqlMatchers
-  describe 'expect(a_type).to interface(interface_names)' do
+  describe 'expect(a_type).to implement(interface_names)' do
     AnInterface = GraphQL::InterfaceType.define do
       name 'AnInterface'
     end
@@ -20,22 +20,22 @@ module RSpec::GraphqlMatchers
       end
     end
 
-    it { is_expected.to interface('Node') }
-    it { is_expected.to interface('AnInterface') }
-    it { is_expected.to interface('Node', 'AnInterface') }
-    it { is_expected.to interface(['Node']) }
-    it { is_expected.to interface(['AnInterface']) }
-    it { is_expected.to interface(['Node', 'AnInterface']) }
-    it { is_expected.to interface(GraphQL::Relay::Node.interface, AnInterface) }
-    it { is_expected.to interface([GraphQL::Relay::Node.interface, AnInterface]) }
+    it { is_expected.to implement('Node') }
+    it { is_expected.to implement('AnInterface') }
+    it { is_expected.to implement('Node', 'AnInterface') }
+    it { is_expected.to implement(['Node']) }
+    it { is_expected.to implement(['AnInterface']) }
+    it { is_expected.to implement(['Node', 'AnInterface']) }
+    it { is_expected.to implement(GraphQL::Relay::Node.interface, AnInterface) }
+    it { is_expected.to implement([GraphQL::Relay::Node.interface, AnInterface]) }
 
-    it { is_expected.not_to interface('AnotherInterface') }
-    it { is_expected.not_to interface(['AnotherInterface']) }
-    it { is_expected.not_to interface(AnotherInterface) }
-    it { is_expected.not_to interface([AnotherInterface]) }
+    it { is_expected.not_to implement('AnotherInterface') }
+    it { is_expected.not_to implement(['AnotherInterface']) }
+    it { is_expected.not_to implement(AnotherInterface) }
+    it { is_expected.not_to implement([AnotherInterface]) }
 
     it 'fails with a failure message when the type does include the interfaces' do
-      expect { expect(a_type).to interface('AnotherInterface') }
+      expect { expect(a_type).to implement('AnotherInterface') }
         .to fail_with(
           "expected interfaces: AnotherInterface\n" \
           'actual interfaces:   Node, AnInterface'
@@ -43,10 +43,10 @@ module RSpec::GraphqlMatchers
     end
 
     it 'provides a description' do
-      matcher = interface('Node, AnInterface')
+      matcher = implement('Node, AnInterface')
       matcher.matches?(a_type)
 
-      expect(matcher.description).to eq('interface Node, AnInterface')
+      expect(matcher.description).to eq('implement Node, AnInterface')
     end
 
     context 'when an invalid type is passed' do

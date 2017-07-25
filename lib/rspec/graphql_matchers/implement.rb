@@ -2,7 +2,7 @@ require_relative 'base_matcher'
 
 module RSpec
   module GraphqlMatchers
-    class Interface < BaseMatcher
+    class Implement < BaseMatcher
       def initialize(interface_names)
         @expected = interface_names.map(&:to_s)
       end
@@ -28,7 +28,7 @@ module RSpec
       end
 
       def description
-        "interface #{@expected.join(', ')}"
+        "implement #{@expected.join(', ')}"
       end
 
       private
