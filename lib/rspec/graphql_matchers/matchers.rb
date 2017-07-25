@@ -2,6 +2,7 @@ require 'rspec/matchers'
 require 'rspec/graphql_matchers/be_of_type'
 require 'rspec/graphql_matchers/accept_arguments'
 require 'rspec/graphql_matchers/have_a_field'
+require 'rspec/graphql_matchers/interface'
 
 module RSpec
   module Matchers
@@ -31,5 +32,9 @@ module RSpec
       RSpec::GraphqlMatchers::HaveAField.new(field_name, :return_fields)
     end
     alias have_return_field have_a_return_field
+
+    def interface(*interface_names)
+      RSpec::GraphqlMatchers::Interface.new(interface_names.flatten)
+    end
   end
 end

@@ -12,6 +12,7 @@ gem 'rspec-graphql_matchers'
 
 The matchers currently supported are:
    - `expect(a_graphql_object).to have_a_field(field_name).that_returns(valid_type)`
+   - `expect(a_graphql_object).to interface(interface_name, ...)`
    - `expect(a_mutation_type).to have_a_return_field(field_name).returning(valid_type)`
    - `expect(a_mutation_type).to have_an_input_field(field_name).of_type(valid_type)`
    - `expect(a_field).to be_of_type(valid_type)`
@@ -32,6 +33,8 @@ Given a `GraphQL::ObjectType` defined as
 PostType = GraphQL::ObjectType.define do
   name "Post"
   description "A blog post"
+
+  interfaces [GraphQL::Relay::Node.interface]
 
   field :id, !types.ID
 
@@ -127,6 +130,20 @@ describe PostType do
 end
 ```
 
+### 4) Test an object's interfaces:
+
+```ruby
+describe PostType do
+  it 'interfaces Node' do
+    expect(subject).to interface('Node')
+  end
+
+  # Accepts arguments as an array and type objects directly
+  it { is_expected.to interface(GraphQL::Relay::Node.interface) }
+  it { is_expected.not_to interface('OtherInterface') }
+end
+```
+
 The spec will only pass if all attributes/types specified in the hash are
 defined on the field.
 
@@ -151,6 +168,5 @@ contributors are expected to adhere to the
 
 ## License
 
-The gem is available as open source under the terms of the 
+The gem is available as open source under the terms of the
 [MIT License](http://opensource.org/licenses/MIT).
-
