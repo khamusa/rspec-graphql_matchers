@@ -8,6 +8,12 @@
 
 ### Bug fixes
 
+## 0.6.0 (July 25, 2017)
+
+### New features
+
+  - (PR #6) New matchers for interfaces: `expect(...).to implement(interface)` (Thanks to @marcgreenstock).
+
 ## 0.5.0 (May 10, 2017)
 
 ### New features
