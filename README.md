@@ -130,6 +130,12 @@ describe PostType do
 end
 ```
 
+The spec will only pass if all attributes/types specified in the hash are
+defined on the field.
+
+For better fluency, `accept_arguments` is also available in singular form, as
+`accept_argument`.
+
 ### 4) Test an object's interface implementations:
 
 ```ruby
@@ -143,12 +149,6 @@ describe PostType do
   it { is_expected.not_to implement('OtherInterface') }
 end
 ```
-
-The spec will only pass if all attributes/types specified in the hash are
-defined on the field.
-
-For better fluency, `accept_arguments` is also available in singular form, as
-`accept_argument`.
 
 ## TODO
 
