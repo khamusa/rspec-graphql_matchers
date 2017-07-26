@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 module RSpec::GraphqlMatchers
-  describe 'expect(a_type).to have_a_return_field(field_name).that_returns(a_type)' do
+  describe 'expect(a_type).to have_a_return_field(field_name)' \
+           '.that_returns(a_type)' do
     subject(:a_type) do
       types_to_define = type_fields
       GraphQL::Relay::Mutation.define do
@@ -26,7 +27,10 @@ module RSpec::GraphqlMatchers
 
     it 'fails with a failure message when the type does not define the field' do
       expect { expect(a_type).to have_a_return_field(:ids) }
-        .to fail_with("expected #{a_type.name} to define field `ids`, but no field was found with that name.")
+        .to fail_with(
+          "expected #{a_type.name} to define field `ids`, but no field was " \
+          'found with that name.'
+        )
     end
 
     it 'provides a description' do
@@ -41,7 +45,8 @@ module RSpec::GraphqlMatchers
       expect(a_type).to have_a_return_field('other').that_returns('ID!')
     end
 
-    it 'passes when the type defines the field with correct type as graphql objects' do
+    it 'passes when the type defines the field with correct type as graphql ' \
+       'objects' do
       expect(a_type).to have_a_return_field(:id).that_returns(types.String)
       expect(a_type).to have_a_return_field('other').that_returns(!types.ID)
     end
@@ -53,11 +58,12 @@ module RSpec::GraphqlMatchers
           ' but the type was `String`.'
         )
 
-      expect { expect(a_type).to have_a_return_field('other').returning(!types.Int) }
-        .to fail_with(
-          "expected #{a_type.name} to define field `other`, of type `Int!`," \
-          ' but the type was `ID!`.'
-        )
+      expect do
+        expect(a_type).to have_a_return_field('other').returning(!types.Int)
+      end.to fail_with(
+        "expected #{a_type.name} to define field `other`, of type `Int!`," \
+        ' but the type was `ID!`.'
+      )
     end
 
     context 'when an invalid type is passed' do
@@ -67,21 +73,23 @@ module RSpec::GraphqlMatchers
         expect { expect(a_type).to have_a_return_field(:id) }
           .to raise_error(
             RuntimeError,
-            'Invalid object InvalidObject provided to have_a_return_field matcher. ' \
-            'It does not seem to be a valid GraphQL object type.'
+            'Invalid object InvalidObject provided to have_a_return_field ' \
+            'matcher. It does not seem to be a valid GraphQL object type.'
           )
       end
     end
 
-    context 'when a field is found but it does not seem a valid graphql field' do
+    context 'when a field is found but it does not seem a valid graphql ' \
+            'field' do
       before do
         allow(a_type.return_fields)
           .to receive(:[]).and_return double(inspect: 'AnInvalidField')
       end
 
       it 'fails with a Runtime error' do
-        expect { expect(a_type).to have_a_return_field(:id).of_type(!types.Int) }
-          .to raise_error(RuntimeError)
+        expect do
+          expect(a_type).to have_a_return_field(:id).of_type(!types.Int)
+        end.to raise_error(RuntimeError)
       end
     end
   end

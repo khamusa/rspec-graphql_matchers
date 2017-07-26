@@ -26,7 +26,8 @@ describe 'expect(a_field).to accept_arguments(arg_name: arg_type, ...)' do
         it { is_expected.to accept_arguments(expected_args) }
       end
 
-      context 'when the field also accepts the expected argument name and type' do
+      context 'when the field also accepts the expected argument name and ' \
+              'type' do
         let(:actual_args) do
           {
             'name' => double(:field, type: types.Int),
@@ -38,7 +39,8 @@ describe 'expect(a_field).to accept_arguments(arg_name: arg_type, ...)' do
         it { is_expected.to accept_arguments(expected_args) }
       end
 
-      context 'the field accepts an argument with the same name but different type' do
+      context 'the field accepts an argument with the same name but ' \
+              'different type' do
         let(:actual_args) { { 'id' => double(:field, type: types.Int) } }
 
         it { is_expected.not_to accept_arguments(expected_args) }
@@ -61,13 +63,15 @@ describe 'expect(a_field).to accept_arguments(arg_name: arg_type, ...)' do
         }
       end
 
-      context 'when the field accepts only one argument with correct name and type' do
+      context 'when the field accepts only one argument with correct name ' \
+              'and type' do
         let(:actual_args) { { 'id' => double(:field, type: types.String) } }
 
         it { is_expected.not_to accept_arguments(expected_args) }
       end
 
-      context 'when the field accepts all but one of the argument expected args' do
+      context 'when the field accepts all but one of the argument expected ' \
+              'args' do
         let(:actual_args) do
           {
             'name' => double(:field, type: types.String),
@@ -92,7 +96,8 @@ describe 'expect(a_field).to accept_arguments(arg_name: arg_type, ...)' do
         it { is_expected.to accept_arguments(expected_args) }
       end
 
-      context 'when the field accepts all arguments, but one has the wrong type' do
+      context 'when the field accepts all arguments, but one has the wrong ' \
+              'type' do
         let(:actual_args) do
           {
             'name' => double(:field, type: types.String),

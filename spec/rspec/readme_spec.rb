@@ -16,6 +16,7 @@ describe 'The readme Examples' do
     )
   end
 
+  # rubocop:disable Security/Eval
   readme_content.scan(ruby_code_regex) do |ruby_code|
     eval(ruby_code[0])
   end

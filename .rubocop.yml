@@ -1,3 +1,7 @@
+AllCops:
+  DisplayCopNames: true
+  DisplayStyleGuide: true
+
 Style/Documentation:
   Enabled: false
 
@@ -26,3 +30,11 @@ Metrics/LineLength:
 
 Metrics/MethodLength:
   Max: 15
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/rspec/*.rb
+
+Metrics/ModuleLength:
+  Exclude:
+    - spec/rspec/*.rb

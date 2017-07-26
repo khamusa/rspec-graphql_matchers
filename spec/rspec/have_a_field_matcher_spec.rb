@@ -37,7 +37,10 @@ module RSpec::GraphqlMatchers
 
     it 'fails with a failure message when the type does not define the field' do
       expect { expect(a_type).to have_a_field(:ids) }
-        .to fail_with("expected #{a_type.inspect} to define field `ids`, but no field was found with that name.")
+        .to fail_with(
+          "expected #{a_type.inspect} to define field `ids`, but no field " \
+          'was found with that name.'
+        )
     end
 
     it 'provides a description' do
@@ -48,12 +51,14 @@ module RSpec::GraphqlMatchers
     end
 
     describe '.that_returns(a_type)' do
-      it 'passes when the type defines the field with correct type as strings' do
+      it 'passes when the type defines the field with correct type as ' \
+         'strings' do
         expect(a_type).to have_a_field(:id).that_returns('String')
         expect(a_type).to have_a_field('other').that_returns('ID!')
       end
 
-      it 'passes when the type defines the field with correct type as graphql objects' do
+      it 'passes when the type defines the field with correct type as ' \
+         'graphql objects' do
         expect(a_type).to have_a_field(:id).that_returns(types.String)
         expect(a_type).to have_a_field('other').that_returns(!types.ID)
       end
@@ -61,14 +66,14 @@ module RSpec::GraphqlMatchers
       it 'fails when the type defines a field of the wrong type' do
         expect { expect(a_type).to have_a_field(:id).returning('String!') }
           .to fail_with(
-            "expected #{a_type.inspect} to define field `id`, of type `String!`," \
-            ' but the type was `String`.'
+            "expected #{a_type.inspect} to define field `id`, " \
+            'of type `String!`, but the type was `String`.'
           )
 
         expect { expect(a_type).to have_a_field('other').returning(!types.Int) }
           .to fail_with(
-            "expected #{a_type.inspect} to define field `other`, of type `Int!`," \
-            ' but the type was `ID!`.'
+            "expected #{a_type.inspect} to define field `other`, " \
+            'of type `Int!`, but the type was `ID!`.'
           )
       end
 
@@ -79,13 +84,14 @@ module RSpec::GraphqlMatchers
           expect { expect(a_type).to have_a_field(:id) }
             .to raise_error(
               RuntimeError,
-              'Invalid object InvalidObject provided to have_a_field matcher. ' \
-              'It does not seem to be a valid GraphQL object type.'
+              'Invalid object InvalidObject provided to have_a_field ' \
+              'matcher. It does not seem to be a valid GraphQL object type.'
             )
         end
       end
 
-      context 'when a field is found but it does not seem a valid graphql field' do
+      context 'when a field is found but it does not seem a valid graphql ' \
+              'field' do
         before do
           allow(a_type.fields)
             .to receive(:[]).and_return double(inspect: 'AnInvalidField')
@@ -117,12 +123,13 @@ module RSpec::GraphqlMatchers
       it { is_expected.to have_a_field(:other).with_hash_key('other_on_hash') }
 
       it 'fails when the hash_key is incorrect' do
-        expect { expect(a_type).to have_a_field(:other).with_hash_key(:whatever) }
-          .to fail_with(
-            "expected #{a_type.inspect} to define field `other`," \
-            ' reading from the `whatever` hash_key,' \
-            ' but the hash_key was `other_on_hash`.'
-          )
+        expect do
+          expect(a_type).to have_a_field(:other).with_hash_key(:whatever)
+        end.to fail_with(
+          "expected #{a_type.inspect} to define field `other`," \
+          ' reading from the `whatever` hash_key,' \
+          ' but the hash_key was `other_on_hash`.'
+        )
       end
     end
 
