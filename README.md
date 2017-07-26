@@ -24,6 +24,11 @@ Where a valid type for the expectation is either:
    - A String representation of a type: `"String!"`, `"Int!"`, `"[String]!"`
    (note the exclamation mark at the end, as required by the [GraphQL specs](http://graphql.org/).
 
+Testing `:property`, `:hash_key` and *metadata* is also possible by chaining `.with_property`, `.with_hash_key` and `.with_metadata`. For example:
+
+  - `expect(a_graphql_object).to have_a_field(field_name).with_property(property_name).with_metadata(metadata_hash)`
+  - `expect(a_graphql_object).to have_a_field(field_name).with_hash_key(hash_key)`
+
 ## Examples
 
 Given a `GraphQL::ObjectType` defined as
@@ -36,9 +41,15 @@ PostType = GraphQL::ObjectType.define do
 
   interfaces [GraphQL::Relay::Node.interface]
 
-  field :id, !types.ID
+  field :id, !types.ID,
+             property: :post_id
 
-  field :comments, !types[types.String]
+  field :comments,
+        !types[types.String],
+        hash_key: :post_comments
+
+  field :isPublished,
+        admin_only: true
 
   field :subposts, PostType do
     type !PostType
@@ -109,7 +120,17 @@ describe PostType do
 end
 ```
 
-### 3) Test the arguments accepted by a field with `accept_arguments` matcher:
+### 3) Test a specific field with `with_property`, `with_hash_key` and `with_metadata`
+
+```ruby
+describe PostType do
+  it { is_expected.to have_a_field(:id).with_property(:post_id) }
+  it { is_expected.to have_a_field(:comments).with_hash_key(:post_comments) }
+  it { is_expected.to have_a_field(:isPublished).with_metadata(admin_only: true) }
+end
+```
+
+### 4) Test the arguments accepted by a field with `accept_arguments` matcher:
 
 ```ruby
 describe PostType do
@@ -136,7 +157,7 @@ defined on the field.
 For better fluency, `accept_arguments` is also available in singular form, as
 `accept_argument`.
 
-### 4) Test an object's interface implementations:
+### 5) Test an object's interface implementations:
 
 ```ruby
 describe PostType do

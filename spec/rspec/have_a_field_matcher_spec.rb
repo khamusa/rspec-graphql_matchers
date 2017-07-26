@@ -1,18 +1,29 @@
 require 'spec_helper'
 
 module RSpec::GraphqlMatchers
-  describe 'expect(a_type).to have_a_field(field_name).that_returns(a_type)' do
+  describe 'expect(a_type).to have_a_field(field_name)' do
     subject(:a_type) do
-      types_to_define = type_fields
       GraphQL::ObjectType.define do
         name 'TestObject'
 
-        types_to_define.each do |fname, ftype|
-          field fname, ftype
-        end
+        field :id,
+              types.String,
+              property: :id_on_model,
+              foo: true,
+              bar: { nested: { objects: true, arrays: [1, 2, 3] } }
+
+        field :other,
+              !types.ID,
+              hash_key: :other_on_hash
       end
     end
-    let(:type_fields) { { 'id' => types.String, 'other' => !types.ID } }
+
+    before do
+      GraphQL::Field.accepts_definitions(
+        foo: GraphQL::Define.assign_metadata_key(:foo),
+        bar: GraphQL::Define.assign_metadata_key(:bar),
+      )
+    end
 
     it { is_expected.to have_a_field(:id) }
 
@@ -36,52 +47,114 @@ module RSpec::GraphqlMatchers
       expect(matcher.description).to eq('define field `id`')
     end
 
-    it 'passes when the type defines the field with correct type as strings' do
-      expect(a_type).to have_a_field(:id).that_returns('String')
-      expect(a_type).to have_a_field('other').that_returns('ID!')
+    describe '.that_returns(a_type)' do
+      it 'passes when the type defines the field with correct type as strings' do
+        expect(a_type).to have_a_field(:id).that_returns('String')
+        expect(a_type).to have_a_field('other').that_returns('ID!')
+      end
+
+      it 'passes when the type defines the field with correct type as graphql objects' do
+        expect(a_type).to have_a_field(:id).that_returns(types.String)
+        expect(a_type).to have_a_field('other').that_returns(!types.ID)
+      end
+
+      it 'fails when the type defines a field of the wrong type' do
+        expect { expect(a_type).to have_a_field(:id).returning('String!') }
+          .to fail_with(
+            "expected #{a_type.inspect} to define field `id`, of type `String!`," \
+            ' but the field type was `String`.'
+          )
+
+        expect { expect(a_type).to have_a_field('other').returning(!types.Int) }
+          .to fail_with(
+            "expected #{a_type.inspect} to define field `other`, of type `Int!`," \
+            ' but the field type was `ID!`.'
+          )
+      end
+
+      context 'when an invalid type is passed' do
+        let(:a_type) { double(to_s: 'InvalidObject') }
+
+        it 'fails with a Runtime error' do
+          expect { expect(a_type).to have_a_field(:id) }
+            .to raise_error(
+              RuntimeError,
+              'Invalid object InvalidObject provided to have_a_field matcher. ' \
+              'It does not seem to be a valid GraphQL object type.'
+            )
+        end
+      end
+
+      context 'when a field is found but it does not seem a valid graphql field' do
+        before do
+          allow(a_type.fields)
+            .to receive(:[]).and_return double(inspect: 'AnInvalidField')
+        end
+
+        it 'fails with a Runtime error' do
+          expect { expect(a_type).to have_a_field(:id).of_type(!types.Int) }
+            .to raise_error(RuntimeError)
+        end
+      end
     end
 
-    it 'passes when the type defines the field with correct type as graphql objects' do
-      expect(a_type).to have_a_field(:id).that_returns(types.String)
-      expect(a_type).to have_a_field('other').that_returns(!types.ID)
-    end
+    describe '.with_property(property_name)' do
+      it { is_expected.to have_a_field(:id).with_property(:id_on_model) }
+      it { is_expected.to have_a_field(:id).with_property('id_on_model') }
 
-    it 'fails when the type defines a field of the wrong type' do
-      expect { expect(a_type).to have_a_field(:id).returning('String!') }
-        .to fail_with(
-          "expected #{a_type.inspect} to define field `id` of type `String!`," \
-          ' but the field type was `String`.'
-        )
-
-      expect { expect(a_type).to have_a_field('other').returning(!types.Int) }
-        .to fail_with(
-          "expected #{a_type.inspect} to define field `other` of type `Int!`," \
-          ' but the field type was `ID!`.'
-        )
-    end
-
-    context 'when an invalid type is passed' do
-      let(:a_type) { double(to_s: 'InvalidObject') }
-
-      it 'fails with a Runtime error' do
-        expect { expect(a_type).to have_a_field(:id) }
-          .to raise_error(
-            RuntimeError,
-            'Invalid object InvalidObject provided to have_a_field matcher. ' \
-            'It does not seem to be a valid GraphQL object type.'
+      it 'fails when the property is incorrect' do
+        expect { expect(a_type).to have_a_field(:id).with_property(:whatever) }
+          .to fail_with(
+            "expected #{a_type.inspect} to define field `id`," \
+            ' reading from the `whatever` property,' \
+            ' but the property was `id_on_model`.'
           )
       end
     end
 
-    context 'when a field is found but it does not seem a valid graphql field' do
-      before do
-        allow(a_type.fields)
-          .to receive(:[]).and_return double(inspect: 'AnInvalidField')
+    describe '.with_hash_key(hash_key)' do
+      it { is_expected.to have_a_field(:other).with_hash_key(:other_on_hash) }
+      it { is_expected.to have_a_field(:other).with_hash_key('other_on_hash') }
+
+      it 'fails when the hash_key is incorrect' do
+        expect { expect(a_type).to have_a_field(:other).with_hash_key(:whatever) }
+          .to fail_with(
+            "expected #{a_type.inspect} to define field `other`," \
+            ' reading from the `whatever` hash_key,' \
+            ' but the hash_key was `other_on_hash`.'
+          )
+      end
+    end
+
+    describe '.with_metadata(metadata)' do
+      it do
+        expected = {
+          foo: true,
+          bar: { nested: { objects: true, arrays: [1, 2, 3] } }
+        }
+        is_expected.to have_a_field(:id).with_metadata(expected)
       end
 
-      it 'fails with a Runtime error' do
-        expect { expect(a_type).to have_a_field(:id).of_type(!types.Int) }
-          .to raise_error(RuntimeError)
+      it 'matches when the object keys are not in the same order' do
+        expected = {
+          bar: { nested: { arrays: [1, 2, 3], objects: true } },
+          foo: true
+        }
+        is_expected.to have_a_field(:id).with_metadata(expected)
+      end
+
+      it 'fais when the metadata is incorrect' do
+        actual = a_type.fields['id'].metadata
+        expected = {
+          foo: false,
+          bar: { nested: { objects: false, arrays: [2, 3, 1] } }
+        }
+        expect { expect(a_type).to have_a_field(:id).with_metadata(expected) }
+          .to fail_with(
+            "expected #{a_type.inspect} to define field `id`," \
+            " with metadata `#{expected.inspect}`," \
+            " but the metadata was `#{actual.inspect}`."
+          )
       end
     end
   end
