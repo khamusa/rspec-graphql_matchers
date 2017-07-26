@@ -67,7 +67,7 @@ module RSpec
       def descriptions
         @expectations.map do |expectation|
           name, expected_value = expectation
-          DESCRIPTIONS[name] % [expected_value]
+          format(DESCRIPTIONS[name], expected_value)
         end
       end
 
@@ -76,7 +76,7 @@ module RSpec
         @results.each do |result|
           name, match = result
           next if match
-          return "but the %s was `%s`" % [name, @actual_field.send(name)]
+          return format('but the %s was `%s`', name, @actual_field.send(name))
         end
       end
 
