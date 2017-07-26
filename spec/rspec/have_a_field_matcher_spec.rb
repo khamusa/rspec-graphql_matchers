@@ -7,21 +7,21 @@ module RSpec::GraphqlMatchers
         name 'TestObject'
 
         field :id,
-              types.String,
-              property: :id_on_model,
-              foo: true,
-              bar: { nested: { objects: true, arrays: [1, 2, 3] } }
+          types.String,
+          property: :id_on_model,
+          foo: true,
+          bar: { nested: { objects: true, arrays: [1, 2, 3] } }
 
         field :other,
-              !types.ID,
-              hash_key: :other_on_hash
+          !types.ID,
+          hash_key: :other_on_hash
       end
     end
 
     before do
       GraphQL::Field.accepts_definitions(
         foo: GraphQL::Define.assign_metadata_key(:foo),
-        bar: GraphQL::Define.assign_metadata_key(:bar),
+        bar: GraphQL::Define.assign_metadata_key(:bar)
       )
     end
 
