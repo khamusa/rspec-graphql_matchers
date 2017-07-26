@@ -62,13 +62,13 @@ module RSpec::GraphqlMatchers
         expect { expect(a_type).to have_a_field(:id).returning('String!') }
           .to fail_with(
             "expected #{a_type.inspect} to define field `id`, of type `String!`," \
-            ' but the field type was `String`.'
+            ' but the type was `String`.'
           )
 
         expect { expect(a_type).to have_a_field('other').returning(!types.Int) }
           .to fail_with(
             "expected #{a_type.inspect} to define field `other`, of type `Int!`," \
-            ' but the field type was `ID!`.'
+            ' but the type was `ID!`.'
           )
       end
 
