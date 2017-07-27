@@ -40,13 +40,15 @@ describe 'expect(a_field).to be_of_type(graphql_type)' do
 
             it 'informs the expected and actual types' do
               expect(failure_message).to end_with(
-                "to be of type '#{expected_type}', but it was '#{field.type}'")
+                "to be of type '#{expected_type}', but it was '#{field.type}'"
+              )
             end
 
             context 'the field does not respond to #name' do
               it 'describes the field through #inspect' do
                 expect(failure_message).to start_with(
-                  "expected field '#{field.inspect}' to be of type")
+                  "expected field '#{field.inspect}' to be of type"
+                )
               end
             end
 
@@ -67,7 +69,7 @@ describe 'expect(a_field).to be_of_type(graphql_type)' do
   describe '#description' do
     let(:matcher) { be_of_type(String) }
 
-    it %q{is "be of type 'String'"} do
+    it %q(is "be of type 'String'") do
       matcher.matches?(double(type: 'NotMeaningful'))
       expect(matcher.description).to eq("be of type 'String'")
     end

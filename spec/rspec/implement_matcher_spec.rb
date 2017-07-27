@@ -25,16 +25,18 @@ module RSpec::GraphqlMatchers
     it { is_expected.to implement('Node', 'AnInterface') }
     it { is_expected.to implement(['Node']) }
     it { is_expected.to implement(['AnInterface']) }
-    it { is_expected.to implement(['Node', 'AnInterface']) }
+    it { is_expected.to implement(%w[Node AnInterface]) }
     it { is_expected.to implement(GraphQL::Relay::Node.interface, AnInterface) }
-    it { is_expected.to implement([GraphQL::Relay::Node.interface, AnInterface]) }
+    it do
+      is_expected.to implement([GraphQL::Relay::Node.interface, AnInterface])
+    end
 
     it { is_expected.not_to implement('AnotherInterface') }
     it { is_expected.not_to implement(['AnotherInterface']) }
     it { is_expected.not_to implement(AnotherInterface) }
     it { is_expected.not_to implement([AnotherInterface]) }
 
-    it 'fails with a failure message when the type does include the interfaces' do
+    it 'fails with a message when the type does include the interfaces' do
       expect { expect(a_type).to implement('AnotherInterface') }
         .to fail_with(
           "expected interfaces: AnotherInterface\n" \

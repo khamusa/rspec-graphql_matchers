@@ -10,6 +10,13 @@ describe 'The readme Examples' do
     )
   )
 
+  before do
+    GraphQL::Field.accepts_definitions(
+      admin_only: GraphQL::Define.assign_metadata_key(:admin_only)
+    )
+  end
+
+  # rubocop:disable Security/Eval
   readme_content.scan(ruby_code_regex) do |ruby_code|
     eval(ruby_code[0])
   end

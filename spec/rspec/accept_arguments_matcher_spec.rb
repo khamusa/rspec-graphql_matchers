@@ -26,7 +26,8 @@ describe 'expect(a_field).to accept_arguments(arg_name: arg_type, ...)' do
         it { is_expected.to accept_arguments(expected_args) }
       end
 
-      context 'when the field also accepts the expected argument name and type' do
+      context 'when the field also accepts the expected argument name and ' \
+              'type' do
         let(:actual_args) do
           {
             'name' => double(:field, type: types.Int),
@@ -38,8 +39,9 @@ describe 'expect(a_field).to accept_arguments(arg_name: arg_type, ...)' do
         it { is_expected.to accept_arguments(expected_args) }
       end
 
-      context 'the field accepts an argument with the same name but different type' do
-        let(:actual_args) { {'id' => double(:field, type: types.Int)} }
+      context 'the field accepts an argument with the same name but ' \
+              'different type' do
+        let(:actual_args) { { 'id' => double(:field, type: types.Int) } }
 
         it { is_expected.not_to accept_arguments(expected_args) }
       end
@@ -61,13 +63,15 @@ describe 'expect(a_field).to accept_arguments(arg_name: arg_type, ...)' do
         }
       end
 
-      context 'when the field accepts only one argument with correct name and type' do
+      context 'when the field accepts only one argument with correct name ' \
+              'and type' do
         let(:actual_args) { { 'id' => double(:field, type: types.String) } }
 
         it { is_expected.not_to accept_arguments(expected_args) }
       end
 
-      context 'when the field accepts all but one of the argument expected args' do
+      context 'when the field accepts all but one of the argument expected ' \
+              'args' do
         let(:actual_args) do
           {
             'name' => double(:field, type: types.String),
@@ -92,7 +96,8 @@ describe 'expect(a_field).to accept_arguments(arg_name: arg_type, ...)' do
         it { is_expected.to accept_arguments(expected_args) }
       end
 
-      context 'when the field accepts all arguments, but one has the wrong type' do
+      context 'when the field accepts all arguments, but one has the wrong ' \
+              'type' do
         let(:actual_args) do
           {
             'name' => double(:field, type: types.String),
@@ -124,9 +129,9 @@ describe 'expect(a_field).to accept_arguments(arg_name: arg_type, ...)' do
     context 'with a single expected argument with types specified' do
       let(:expected_args) { { ability: types.Float } }
 
-      it %q{returns a description with the argument name and type} do
-        expect(description).
-          to eq("accept arguments ability(Float)")
+      it 'returns a description with the argument name and type' do
+        expect(description)
+          .to eq('accept arguments ability(Float)')
       end
     end
 
@@ -135,9 +140,9 @@ describe 'expect(a_field).to accept_arguments(arg_name: arg_type, ...)' do
         { ability: types.Int, id: types.Int, some: types.Boolean }
       end
 
-      it %q{describes the arguments the field should accept and their types} do
-        expect(description).
-          to eq("accept arguments ability(Int), id(Int), some(Boolean)")
+      it 'describes the arguments the field should accept and their types' do
+        expect(description)
+          .to eq('accept arguments ability(Int), id(Int), some(Boolean)')
       end
     end
   end
@@ -153,13 +158,15 @@ describe 'expect(a_field).to accept_arguments(arg_name: arg_type, ...)' do
 
     it 'informs the expected and actual types' do
       expect(failure_message).to end_with(
-        "to accept arguments will(NotMatch)")
+        'to accept arguments will(NotMatch)'
+      )
     end
 
     context 'the field does not respond to #name' do
       it 'describes the field through #inspect' do
         expect(failure_message).to start_with(
-          "expected field '#{field.inspect}' to")
+          "expected field '#{field.inspect}' to"
+        )
       end
     end
 
