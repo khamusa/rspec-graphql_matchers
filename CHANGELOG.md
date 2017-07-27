@@ -8,6 +8,16 @@
 
 ### Bug fixes
 
+## 0.7.0 (July 27, 2017)
+
+### New features
+
+  - (#9, #8) New chainable matchers `with_property`, `with_hash_key` and `with_metadata` (Thanks to @marcgreenstock).
+
+### Improvements
+
+  - Default Raketask runs rubocop specs as well (Thanks to @marcgreenstock).
+
 ## 0.6.0 (July 25, 2017)
 
 ### New features
