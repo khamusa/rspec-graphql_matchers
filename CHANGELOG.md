@@ -8,11 +8,15 @@
 
 ### Bug fixes
 
+## 0.7.1 (July 27, 2017)
+
+Changelog fixes.
+
 ## 0.7.0 (July 27, 2017)
 
 ### New features
 
-  - (#9, #8) New chainable matchers `with_property`, `with_hash_key` and `with_metadata` (Thanks to @marcgreenstock).
+  - (#3, #8) New chainable matchers `with_property`, `with_hash_key` and `with_metadata` (Thanks to @marcgreenstock).
 
 ### Improvements
 
