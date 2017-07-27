@@ -1,3 +1,5 @@
+![Build Status](https://travis-ci.org/khamusa/rspec-graphql_matchers.svg?branch=master)
+
 # Rspec::GraphqlMatchers
 
 Convenient rspec matchers for testing your [graphql-ruby](https://github.com/rmosolgo/graphql-ruby) API/Schema.
