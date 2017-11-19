@@ -7,7 +7,8 @@ module RSpec
         type: 'of type `%s`',
         property: 'reading from the `%s` property',
         hash_key: 'reading from the `%s` hash_key',
-        metadata: 'with metadata `%s`'
+        metadata: 'with metadata `%s`',
+        deprecation_reason: 'with deprecation reason `%s`'
       }.freeze
 
       def initialize(expected_field_name, fields = :fields)
@@ -49,6 +50,11 @@ module RSpec
 
       def with_metadata(expected_metadata)
         @expectations << [:metadata, expected_metadata]
+        self
+      end
+
+      def with_deprecation_reason(expected_deprecation_reason)
+        @expectations << [:deprecation_reason, expected_deprecation_reason]
         self
       end
 

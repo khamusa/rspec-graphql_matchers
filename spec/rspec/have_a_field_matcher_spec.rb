@@ -9,6 +9,7 @@ module RSpec::GraphqlMatchers
         field :id,
           types.String,
           property: :id_on_model,
+          deprecation_reason: 'Deprecated',
           foo: true,
           bar: { nested: { objects: true, arrays: [1, 2, 3] } }
 
@@ -100,6 +101,49 @@ module RSpec::GraphqlMatchers
         it 'fails with a Runtime error' do
           expect { expect(a_type).to have_a_field(:id).of_type(!types.Int) }
             .to raise_error(RuntimeError)
+        end
+      end
+    end
+
+    describe '.with_deprecation_reason(deprecation_reason)' do
+      context 'when a deprecation reason is present' do
+        it 'passes when the deprecation reason is correct' do
+          expect(a_type).to have_a_field(:id)
+            .with_deprecation_reason('Deprecated')
+        end
+
+        it 'fails when the deprecation reason is incorrect' do
+          expect do
+            expect(a_type).to have_a_field(:id)
+              .with_deprecation_reason('whatever')
+          end.to fail_with(
+            "expected #{a_type.inspect} to define field `id`," \
+            ' with deprecation reason `whatever`,' \
+            ' but the deprecation_reason was `Deprecated`.'
+          )
+        end
+      end
+
+      context 'when there is no deprecation reason present' do
+        subject(:a_type) do
+          GraphQL::ObjectType.define do
+            name 'TestObject'
+
+            field :id,
+              types.String,
+              property: :id_on_model
+          end
+        end
+
+        it 'fails when the reasons do not match' do
+          expect do
+            expect(a_type).to have_a_field(:id)
+              .with_deprecation_reason('whatever')
+          end.to fail_with(
+            "expected #{a_type.inspect} to define field `id`," \
+            ' with deprecation reason `whatever`,' \
+            ' but the deprecation_reason was ``.'
+          )
         end
       end
     end
