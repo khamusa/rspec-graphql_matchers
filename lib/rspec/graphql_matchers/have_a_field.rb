@@ -105,6 +105,8 @@ module RSpec
       def field_collection
         if @graph_object.respond_to?(@fields)
           @graph_object.public_send(@fields)
+        elsif @graph_object.class.respond_to?(@fields)
+          @graph_object.class.public_send(@fields)
         else
           raise "Invalid object #{@graph_object} provided to #{matcher_name} " \
             'matcher. It does not seem to be a valid GraphQL object type.'
