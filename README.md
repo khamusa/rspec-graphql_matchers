@@ -66,6 +66,8 @@ end
 
 ```ruby
 describe PostType do
+  subject { described_class }
+
   it 'defines a field id of type ID!' do
     expect(subject).to have_field(:id).that_returns(!types.ID)
   end
