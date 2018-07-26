@@ -37,6 +37,11 @@ module RSpec
       alias returning that_returns
       alias of_type that_returns
 
+      def with_mutation(expected_mutation_class)
+        @expectations << [:mutation, expected_mutation_class]
+        self
+      end
+
       def with_property(expected_property_name)
         @expectations << [:property, expected_property_name]
         self
