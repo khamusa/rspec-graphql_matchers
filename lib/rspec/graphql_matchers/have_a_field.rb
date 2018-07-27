@@ -7,7 +7,9 @@ module RSpec
         type: 'of type `%s`',
         property: 'reading from the `%s` property',
         hash_key: 'reading from the `%s` hash_key',
-        metadata: 'with metadata `%s`'
+        metadata: 'with metadata `%s`',
+        mutation: 'with mutation `%s`',
+        arguments: 'with arguments `%s`',
       }.freeze
 
       def initialize(expected_field_name, fields = :fields)
@@ -42,6 +44,11 @@ module RSpec
         self
       end
 
+      def with_args(*expected_arguments_name)
+        @expectations << [:arguments, expected_arguments_name]
+        self
+      end
+
       def with_property(expected_property_name)
         @expectations << [:property, expected_property_name]
         self
@@ -69,6 +76,10 @@ module RSpec
 
       private
 
+      def arguments_matcher(expected_value)
+        @actual_field.arguments.keys.map(&:to_sym) == expected_value
+      end
+
       def descriptions
         @expectations.map do |expectation|
           name, expected_value = expectation
@@ -81,7 +92,7 @@ module RSpec
         @results.each do |result|
           name, match = result
           next if match
-          return format('but the %s was `%s`', name, @actual_field.send(name))
+          return format('but the %s was `%s`', name, actual_field_value(name))
         end
       end
 
@@ -90,7 +101,21 @@ module RSpec
         if expected_value.is_a?(Hash)
           @actual_field.send(name) == expected_value
         else
-          @actual_field.send(name).to_s == expected_value.to_s
+          if respond_to?("#{name}_matcher", true)
+            send("#{name}_matcher", expected_value)
+          else
+            actual_field_value(name) == expected_value.to_s
+          end
+        end
+      end
+
+      def actual_field_value(name)
+        actual = @actual_field.send(name)
+        begin
+          ret = (actual.to_graphql if actual.respond_to?(:to_graphql)).to_s
+          ret.empty? ? actual.to_s : ret
+        rescue NotImplementedError
+          actual.to_s
         end
       end
 

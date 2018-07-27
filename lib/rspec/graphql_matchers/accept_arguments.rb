@@ -17,7 +17,7 @@ module RSpec
 
       def failure_message
         "expected field '#{field_name(actual_field)}' to accept arguments "\
-        "#{describe_arguments(expected_args)}"
+        "#{describe_arguments(expected_args)}, actual was #{describe_arguments(actual_field.arguments)}"
       end
 
       def description
@@ -27,14 +27,23 @@ module RSpec
       private
 
       def matches_argument?(arg_name, arg_type)
-        actual_arg = actual_field.arguments[arg_name.to_s]
-        actual_arg && actual_arg.type.to_s == arg_type.to_s
+        actual_type_value(actual_field.arguments[arg_name.to_s]) == arg_type.to_s
       end
 
       def describe_arguments(what_args)
         what_args.sort.map do |arg_name, arg_type|
-          "#{arg_name}(#{arg_type})"
+          "#{arg_name}(#{actual_type_value(arg_type)})"
         end.join(', ')
+      end
+
+      def actual_type_value(actual)
+        actual = actual.type if actual.respond_to?(:type)
+        begin
+          ret = (actual.to_graphql if actual.respond_to?(:to_graphql)).to_s
+          ret.empty? ? actual.to_s : ret
+        rescue NotImplementedError
+          actual.to_s
+        end
       end
 
       def field_name(field)
