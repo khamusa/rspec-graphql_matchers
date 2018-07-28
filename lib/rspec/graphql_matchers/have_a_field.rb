@@ -10,6 +10,8 @@ module RSpec
         metadata: 'with metadata `%s`',
         mutation: 'with mutation `%s`',
         arguments: 'with arguments `%s`',
+        authorize: 'with authorization',
+
       }.freeze
 
       def initialize(expected_field_name, fields = :fields)
@@ -49,6 +51,11 @@ module RSpec
         self
       end
 
+      def with_authorization
+        @expectations << [:authorize, true]
+        self
+      end
+
       def with_property(expected_property_name)
         @expectations << [:property, expected_property_name]
         self
@@ -78,6 +85,10 @@ module RSpec
 
       def arguments_matcher(expected_value)
         @actual_field.arguments.keys.map(&:to_sym) == expected_value
+      end
+
+      def authorize_matcher(expected_value)
+        @actual_field.instance_variable_get(:@authorize) == expected_value
       end
 
       def descriptions
