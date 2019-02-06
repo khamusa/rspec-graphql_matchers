@@ -73,10 +73,12 @@ module RSpec
 
       def explanation
         return 'but no field was found with that name' unless @actual_field
+
         @results.each do |result|
           name, match = result
           next if match
-          return format('but the %s was `%s`', name, @actual_field.send(name))
+
+          return "but the #{name} was `#{@actual_field.send(name)}`"
         end
       end
 
@@ -91,6 +93,7 @@ module RSpec
 
       def ensure_method_exists!(method_name)
         return if @actual_field.respond_to?(method_name)
+
         raise(
           "The `#{@expected_field_name}` field defined by the GraphQL object " \
           "does\'t seem valid as it does not respond to ##{method_name}. " \
