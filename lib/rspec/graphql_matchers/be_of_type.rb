@@ -9,7 +9,8 @@ module RSpec
 
       def matches?(actual_sample)
         @sample = actual_sample
-        sample.type.to_s == @expected.to_s
+        @type = @sample.type.of_type.to_s.split("::")[-1]
+        @type == @expected.to_s
       end
 
       def failure_message
