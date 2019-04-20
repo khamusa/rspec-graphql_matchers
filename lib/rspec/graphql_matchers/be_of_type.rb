@@ -9,7 +9,7 @@ module RSpec
 
       def matches?(actual_sample)
         @sample = actual_sample
-        @type = (@sample.type.is_a?(Class) ? @sample.type : @sample_type.of_type).to_s.split("::")[-1]
+        @type = (@sample.type.is_a?(Class) ? @sample.type : @sample.type.of_type).to_s.split("::")[-1]
         @type == @expected.to_s
       end
 
