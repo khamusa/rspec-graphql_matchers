@@ -28,8 +28,8 @@ module RSpec::GraphqlMatchers
     it 'fails with a failure message when the type does not define the field' do
       expect { expect(a_type).to have_an_input_field(:ids) }
         .to fail_with(
-          "expected #{a_type.name} to define field `ids`, but no field was " \
-          'found with that name.'
+          "expected #{a_type.name} to define field `ids` but no field was " \
+          'found with that name'
         )
     end
 
@@ -54,15 +54,13 @@ module RSpec::GraphqlMatchers
     it 'fails when the type defines a field of the wrong type' do
       expect { expect(a_type).to have_an_input_field(:id).returning('String!') }
         .to fail_with(
-          "expected #{a_type.name} to define field `id`, of type `String!`," \
-          ' but the type was `String`.'
+          "expected #{a_type.name} to define field `id` of type `String!`"
         )
 
       expect do
         expect(a_type).to have_an_input_field('other').returning(!types.Int)
       end.to fail_with(
-        "expected #{a_type.name} to define field `other`, of type `Int!`," \
-        ' but the type was `ID!`.'
+        "expected #{a_type.name} to define field `other` of type `Int!`"
       )
     end
 
@@ -76,20 +74,6 @@ module RSpec::GraphqlMatchers
             'Invalid object InvalidObject provided to have_an_input_field ' \
             'matcher. It does not seem to be a valid GraphQL object type.'
           )
-      end
-    end
-
-    context 'when a field is found but it does not seem a valid graphql ' \
-            'field' do
-      before do
-        allow(a_type.input_fields)
-          .to receive(:[]).and_return double(inspect: 'AnInvalidField')
-      end
-
-      it 'fails with a Runtime error' do
-        expect do
-          expect(a_type).to have_an_input_field(:id).of_type(!types.Int)
-        end.to raise_error(RuntimeError)
       end
     end
   end

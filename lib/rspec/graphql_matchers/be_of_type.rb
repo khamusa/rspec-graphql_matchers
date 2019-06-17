@@ -9,7 +9,7 @@ module RSpec
 
       def matches?(actual_sample)
         @sample = actual_sample
-        sample.type.to_s == @expected.to_s
+        sample.respond_to?(:type) && sample.type.to_s == @expected.to_s
       end
 
       def failure_message
@@ -24,7 +24,9 @@ module RSpec
       private
 
       def field_name(field)
-        field.respond_to?(:name) && field.name || field.inspect
+        field.respond_to?(:graphql_name) && field.graphql_name ||
+          field.respond_to?(:name) && field.name ||
+          field.inspect
       end
     end
   end

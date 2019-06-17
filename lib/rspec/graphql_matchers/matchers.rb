@@ -20,10 +20,12 @@ module RSpec
       RSpec::GraphqlMatchers::HaveAField.new(field_name)
     end
     alias have_field have_a_field
+
     def have_an_input_field(field_name)
       RSpec::GraphqlMatchers::HaveAField.new(field_name, :input_fields)
     end
     alias have_input_field have_an_input_field
+
     def have_a_return_field(field_name)
       RSpec::GraphqlMatchers::HaveAField.new(field_name, :return_fields)
     end

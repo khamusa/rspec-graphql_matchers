@@ -1,4 +1,8 @@
 require_relative 'base_matcher'
+require_relative './have_a_field_matchers/of_type'
+require_relative './have_a_field_matchers/with_property'
+require_relative './have_a_field_matchers/with_metadata'
+require_relative './have_a_field_matchers/with_hash_key'
 
 module RSpec
   module GraphqlMatchers
@@ -23,79 +27,54 @@ module RSpec
         @actual_field = field_collection[@expected_field_name]
         return false if @actual_field.nil?
 
-        @results = @expectations.map do |expectaiton|
-          name, expected_value = expectaiton
-          [name, expectation_matches?(name, expected_value)]
-        end.to_h
-        @results.values.all?
+        @results = @expectations.select do |matcher|
+          !matcher.matches?(@actual_field)
+        end
+
+        @results.empty?
       end
 
       def that_returns(expected_field_type)
-        @expectations << [:type, expected_field_type]
+        @expectations << HaveAFieldMatchers::OfType.new(expected_field_type)
         self
       end
+
       alias returning that_returns
       alias of_type that_returns
 
       def with_property(expected_property_name)
-        @expectations << [:property, expected_property_name]
+        @expectations << HaveAFieldMatchers::WithProperty.new(expected_property_name)
         self
       end
 
       def with_hash_key(expected_hash_key)
-        @expectations << [:hash_key, expected_hash_key]
+        @expectations << HaveAFieldMatchers::WithHashKey.new(expected_hash_key)
+
         self
       end
 
       def with_metadata(expected_metadata)
-        @expectations << [:metadata, expected_metadata]
+        @expectations << HaveAFieldMatchers::WithMetadata.new(expected_metadata)
         self
       end
 
       def failure_message
-        "expected #{describe_obj(@graph_object)} to " \
-          "#{description}, #{explanation}."
+        base_msg = "expected #{describe_obj(@graph_object)} " \
+          "to define field `#{@expected_field_name}`" \
+
+        return "#{base_msg} #{descriptions.join(', ')}" if @actual_field
+
+        "#{base_msg} but no field was found with that name"
       end
 
       def description
-        ["define field `#{@expected_field_name}`"]
-          .concat(descriptions).join(', ')
+        ["define field `#{@expected_field_name}`"].concat(descriptions).join(', ')
       end
 
       private
 
       def descriptions
-        @expectations.map do |expectation|
-          name, expected_value = expectation
-          format(DESCRIPTIONS[name], expected_value)
-        end
-      end
-
-      def explanation
-        return 'but no field was found with that name' unless @actual_field
-        @results.each do |result|
-          name, match = result
-          next if match
-          return format('but the %s was `%s`', name, @actual_field.send(name))
-        end
-      end
-
-      def expectation_matches?(name, expected_value)
-        ensure_method_exists!(name)
-        if expected_value.is_a?(Hash)
-          @actual_field.send(name) == expected_value
-        else
-          @actual_field.send(name).to_s == expected_value.to_s
-        end
-      end
-
-      def ensure_method_exists!(method_name)
-        return if @actual_field.respond_to?(method_name)
-        raise(
-          "The `#{@expected_field_name}` field defined by the GraphQL object " \
-          "does\'t seem valid as it does not respond to ##{method_name}. " \
-          "\n\n\tThe field found was #{@actual_field.inspect}. "
-        )
+        @results.map(&:description)
       end
 
       def describe_obj(field)
