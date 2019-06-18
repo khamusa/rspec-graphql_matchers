@@ -1,5 +1,5 @@
 require_relative 'base_matcher'
-require 'pry'
+
 module RSpec
   module GraphqlMatchers
     class AcceptArguments < BaseMatcher

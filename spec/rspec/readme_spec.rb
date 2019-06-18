@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'pry'
 
 describe 'The readme Examples' do
   ruby_code_regex = /```ruby(.*?)```/m
