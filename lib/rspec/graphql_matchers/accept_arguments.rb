@@ -1,6 +1,8 @@
+require_relative 'base_matcher'
+require 'pry'
 module RSpec
   module GraphqlMatchers
-    class AcceptArguments
+    class AcceptArguments < BaseMatcher
       attr_reader :actual_field, :expected_args
 
       def initialize(expected_args)
@@ -16,7 +18,7 @@ module RSpec
       end
 
       def failure_message
-        "expected field '#{field_name(actual_field)}' to accept arguments "\
+        "expected field '#{member_name(actual_field)}' to accept arguments "\
         "#{describe_arguments(expected_args)}"
       end
 
@@ -28,17 +30,14 @@ module RSpec
 
       def matches_argument?(arg_name, arg_type)
         actual_arg = actual_field.arguments[arg_name.to_s]
-        actual_arg && actual_arg.type.to_s == arg_type.to_s
+
+        actual_arg && types_match?(actual_arg.type, arg_type)
       end
 
       def describe_arguments(what_args)
         what_args.sort.map do |arg_name, arg_type|
           "#{arg_name}(#{arg_type})"
         end.join(', ')
-      end
-
-      def field_name(field)
-        field.respond_to?(:name) && field.name || field.inspect
       end
     end
   end

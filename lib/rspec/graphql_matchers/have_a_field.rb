@@ -59,7 +59,7 @@ module RSpec
       end
 
       def failure_message
-        base_msg = "expected #{describe_obj(@graph_object)} " \
+        base_msg = "expected #{member_name(@graph_object)} " \
           "to define field `#{@expected_field_name}`" \
 
         return "#{base_msg} #{descriptions.join(', ')}" if @actual_field
@@ -75,10 +75,6 @@ module RSpec
 
       def descriptions
         @results.map(&:description)
-      end
-
-      def describe_obj(field)
-        field.respond_to?(:name) && field.name || field.inspect
       end
 
       def field_collection

@@ -1,6 +1,8 @@
+require_relative 'base_matcher'
+
 module RSpec
   module GraphqlMatchers
-    class BeOfType
+    class BeOfType < BaseMatcher
       attr_reader :sample, :expected
 
       def initialize(expected)
@@ -13,20 +15,12 @@ module RSpec
       end
 
       def failure_message
-        "expected field '#{field_name(sample)}' to be of type '#{expected}', " \
+        "expected field '#{member_name(sample)}' to be of type '#{expected}', " \
         "but it was '#{sample.type}'"
       end
 
       def description
         "be of type '#{expected}'"
-      end
-
-      private
-
-      def field_name(field)
-        field.respond_to?(:graphql_name) && field.graphql_name ||
-          field.respond_to?(:name) && field.name ||
-          field.inspect
       end
     end
   end

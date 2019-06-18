@@ -16,7 +16,7 @@ module RSpec::GraphqlMatchers
       it 'fails with a failure message when the type does not define the field' do
         expect { expect(a_type).to have_a_field(:ids) }
           .to fail_with(
-            "expected #{a_type.inspect} to define field `ids` but no field " \
+            "expected TestObject to define field `ids` but no field " \
             'was found with that name'
           )
       end
@@ -44,13 +44,13 @@ module RSpec::GraphqlMatchers
         it 'fails when the type defines a field of the wrong type' do
           expect { expect(a_type).to have_a_field(:id).returning('String!') }
             .to fail_with(
-              "expected #{a_type.inspect} to define field `id` " \
+              "expected TestObject to define field `id` " \
               'of type `String!`'
             )
 
           expect { expect(a_type).to have_a_field('other').returning(!types.Int) }
             .to fail_with(
-              "expected #{a_type.inspect} to define field `other` " \
+              "expected TestObject to define field `other` " \
               'of type `Int!`'
             )
         end
@@ -77,7 +77,7 @@ module RSpec::GraphqlMatchers
           expect do
             expect(a_type).to have_a_field(:other).with_hash_key(:whatever)
           end.to fail_with(
-            "expected #{a_type.inspect} to define field `other` " \
+            "expected TestObject to define field `other` " \
             'with hash key `whatever`'
           )
         end
@@ -131,7 +131,7 @@ module RSpec::GraphqlMatchers
         it 'fails when the property is incorrect' do
           expect { expect(a_type).to have_a_field(:id).with_property(:whatever) }
             .to fail_with(
-              "expected #{a_type.inspect} to define field `id`" \
+              "expected TestObject to define field `id`" \
               ' resolving with property `whatever`'
             )
         end
@@ -162,7 +162,7 @@ module RSpec::GraphqlMatchers
           }
           expect { expect(a_type).to have_a_field(:id).with_metadata(expected) }
             .to fail_with(
-              "expected #{a_type.inspect} to define field `id`" \
+              "expected TestObject to define field `id`" \
               " with metadata `#{expected.inspect}`"
             )
         end
