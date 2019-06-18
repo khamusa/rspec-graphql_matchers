@@ -20,7 +20,7 @@
 
 ### New features
 
--   Support Class-based type definition api (adds support for graphql-ruby v1.8.x). Please note that `.with_metadata` and `.with_property` support has been kept but will only work on fields defined using the legacy api.
+-   Add support for Class-based type definition api (adds support for graphql-ruby v1.8.x). Please note that `.with_metadata` and `.with_property` support has been kept but will only work on fields defined using the legacy api.
 
 ### Bug fixes
 

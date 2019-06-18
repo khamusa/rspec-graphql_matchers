@@ -10,9 +10,7 @@ module RSpec
       def matches?(graph_object)
         @graph_object = graph_object
         @actual = actual
-        @expected.each do |name|
-          return false unless @actual.include?(name)
-        end
+        @expected.all? { |name| @actual.include?(name) }
       end
 
       def failure_message
@@ -35,11 +33,19 @@ module RSpec
 
       def actual
         if @graph_object.respond_to?(:interfaces)
-          @graph_object.interfaces.map(&:to_s)
+          @graph_object.interfaces.map do |interface|
+            interface_name(interface)
+          end
         else
           raise "Invalid object #{@graph_object} provided to #{matcher_name} " \
             'matcher. It does not seem to be a valid GraphQL object type.'
         end
+      end
+
+      def interface_name(interface)
+        return interface.graphql_name if interface.respond_to?(:graphql_name)
+
+        interface.to_s
       end
     end
   end
