@@ -12,7 +12,7 @@ module RSpec
 
       def matches?(actual_sample)
         @sample = actual_sample
-        sample.respond_to?(:type) && sample.type.to_s == @expected.to_s
+        sample.respond_to?(:type) && types_match?(sample.type, @expected)
       end
 
       def failure_message
