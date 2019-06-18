@@ -13,23 +13,25 @@ gem 'rspec-graphql_matchers'
 ## Usage
 
 The matchers currently supported are:
-   - `expect(a_graphql_object).to have_a_field(field_name).that_returns(valid_type)`
-   - `expect(a_graphql_object).to implement(interface_name, ...)`
-   - `expect(a_mutation_type).to have_a_return_field(field_name).returning(valid_type)`
-   - `expect(a_mutation_type).to have_an_input_field(field_name).of_type(valid_type)`
-   - `expect(a_field).to be_of_type(valid_type)`
-   - `expect(an_input).to accept_arguments(hash_of_arg_names_and_valid_types)`
-   - `expect(an_input).to accept_arguments(hash_of_arg_names_and_valid_types)`
+
+-   `expect(a_graphql_object).to have_a_field(field_name).that_returns(valid_type)`
+-   `expect(a_graphql_object).to implement(interface_name, ...)`
+-   `expect(a_mutation_type).to have_a_return_field(field_name).returning(valid_type)`
+-   `expect(a_mutation_type).to have_an_input_field(field_name).of_type(valid_type)`
+-   `expect(a_field).to be_of_type(valid_type)`
+-   `expect(an_input).to accept_arguments(hash_of_arg_names_and_valid_types)`
+-   `expect(an_input).to accept_arguments(hash_of_arg_names_and_valid_types)`
 
 Where a valid type for the expectation is either:
-   - A `GraphQL::ObjectType` object (ex: `types.String`, `!types.Int`, `types[types.Int]`, or your own)
-   - A String representation of a type: `"String!"`, `"Int!"`, `"[String]!"`
-   (note the exclamation mark at the end, as required by the [GraphQL specs](http://graphql.org/).
 
-Testing `:property`, `:hash_key` and *metadata* is also possible by chaining `.with_property`, `.with_hash_key` and `.with_metadata`. For example:
+-   A `GraphQL::ObjectType` object (ex: `types.String`, `!types.Int`, `types[types.Int]`, or your own)
+-   A String representation of a type: `"String!"`, `"Int!"`, `"[String]!"`
+    (note the exclamation mark at the end, as required by the [GraphQL specs](http://graphql.org/).
 
-  - `expect(a_graphql_object).to have_a_field(field_name).with_property(property_name).with_metadata(metadata_hash)`
-  - `expect(a_graphql_object).to have_a_field(field_name).with_hash_key(hash_key)`
+For objects defined with the legacy `#define` api, testing `:property`, `:hash_key` and _metadata_ is also possible by chaining `.with_property`, `.with_hash_key` and `.with_metadata`. For example:
+
+-   `expect(a_graphql_object).to have_a_field(field_name).with_property(property_name).with_metadata(metadata_hash)`
+-   `expect(a_graphql_object).to have_a_field(field_name).with_hash_key(hash_key)`
 
 ## Examples
 
@@ -75,6 +77,7 @@ describe PostType do
   it { is_expected.to have_a_field(:id).returning("ID!") }
 end
 ```
+
 ### 2) Test a specific field type with `be_of_type` matcher:
 
 ```ruby
@@ -175,14 +178,14 @@ end
 
 ## TODO
 
-  - New matchers!
+-   New matchers!
 
 ## Contributing
 
-  - Send Bug reports, suggestions or any general
+-   Send Bug reports, suggestions or any general
     question through the [Issue tracker](https://github.com/khamusa/rspec-graphql_matchers/issues).
     Think of another matcher that could be useful? This is the place to ask, or...
-  - Pull requests are welcome through the usual procedure: fork the project,
+-   Pull requests are welcome through the usual procedure: fork the project,
     commit your changes and open the [PR](https://github.com/khamusa/rspec-graphql_matchers/pulls).
 
 This project is intended to be a safe, welcoming space for collaboration, and
