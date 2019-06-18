@@ -24,7 +24,7 @@ The matchers currently supported are:
 
 Where a valid type for the expectation is either:
 
--   A `GraphQL::ObjectType` object (ex: `types.String`, `!types.Int`, `types[types.Int]`, or your own)
+-   A reference to the actual type you expect;
 -   A String representation of a type: `"String!"`, `"Int!"`, `"[String]!"`
     (note the exclamation mark at the end, as required by the [GraphQL specs](http://graphql.org/).
 
@@ -106,9 +106,9 @@ end
 Keep in mind that when using strings as type expectation you have to use the
 type name (`Post`) and not the constant name (`PostType`).
 
-Using your type objects directly has the advantage that if you
-decide to rename the type your specs won't break, as they would had you
-hardcoded it as a String.
+Using your type objects directly is riskier than the string representation, since
+renaming the graphql name of an object is potentially a breaking change that
+wouldn't get caught by your test suite.
 
 You can also use the built-in [graphql-ruby](https://github.com/rmosolgo/graphql-ruby) scalar types:
 
