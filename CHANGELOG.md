@@ -16,11 +16,14 @@
 
 ### Deprecations
 
--   `.with_metadata` and `.with_property` matchers for fields will be removed on the next release.
+-   `.with_metadata` and `.with_property` matchers for fields will be removed on the next release;
+-   `.accept_arguments` (plural form) will be removed on the next release;
+-   `.accept_argument` (singular form) receiving a hash with a single or multiple arguments will no longer be supported, use `accept_argument(name).of_type('MyType')` instead.
 
 ### New features
 
 -   Add support for Class-based type definition api (adds support for graphql-ruby v1.8.x). Please note that `.with_metadata` and `.with_property` support has been kept but will only work on fields defined using the legacy api.
+-   Implemented `accept_argument(arg_name).of_type('MyType')´ matcher, which returns much clearer error messages when the arguments are not found on the target type.
 
 ### Bug fixes
 

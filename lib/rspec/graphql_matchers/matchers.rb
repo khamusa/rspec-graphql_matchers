@@ -1,6 +1,7 @@
 require 'rspec/matchers'
 require 'rspec/graphql_matchers/be_of_type'
 require 'rspec/graphql_matchers/accept_arguments'
+require 'rspec/graphql_matchers/accept_argument'
 require 'rspec/graphql_matchers/have_a_field'
 require 'rspec/graphql_matchers/implement'
 
@@ -10,10 +11,13 @@ module RSpec
       RSpec::GraphqlMatchers::BeOfType.new(expected)
     end
 
+    def accept_argument(expected_argument)
+      RSpec::GraphqlMatchers::AcceptArgument.new(expected_argument)
+     end
+
     def accept_arguments(expected_args)
       RSpec::GraphqlMatchers::AcceptArguments.new(expected_args)
     end
-    alias accept_argument accept_arguments
 
     # rubocop:disable Style/PredicateName
     def have_a_field(field_name)

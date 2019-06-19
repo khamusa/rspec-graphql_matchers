@@ -54,13 +54,15 @@ module RSpec::GraphqlMatchers
     it 'fails when the type defines a field of the wrong type' do
       expect { expect(a_type).to have_an_input_field(:id).returning('String!') }
         .to fail_with(
-          "expected #{a_type.name} to define field `id` of type `String!`"
+          "expected #{a_type.name} to define field `id` of type `String!`, " \
+          'but it was `String`'
         )
 
       expect do
         expect(a_type).to have_an_input_field('other').returning(!types.Int)
       end.to fail_with(
-        "expected #{a_type.name} to define field `other` of type `Int!`"
+        "expected #{a_type.name} to define field `other` of type `Int!`, " \
+        'but it was `ID!`'
       )
     end
 

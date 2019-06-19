@@ -14,18 +14,17 @@ gem 'rspec-graphql_matchers'
 
 The matchers currently supported are:
 
--   `expect(a_graphql_object).to have_a_field(field_name).that_returns(valid_type)`
+-   `expect(a_graphql_object).to have_a_field(field_name).of_type(valid_type)`
 -   `expect(a_graphql_object).to implement(interface_name, ...)`
 -   `expect(a_mutation_type).to have_a_return_field(field_name).returning(valid_type)`
 -   `expect(a_mutation_type).to have_an_input_field(field_name).of_type(valid_type)`
 -   `expect(a_field).to be_of_type(valid_type)`
--   `expect(an_input).to accept_arguments(hash_of_arg_names_and_valid_types)`
--   `expect(an_input).to accept_arguments(hash_of_arg_names_and_valid_types)`
+-   `expect(an_input).to accept_argument(argument_name).of_type(valid_type)`
 
 Where a valid type for the expectation is either:
 
 -   A reference to the actual type you expect;
--   A String representation of a type: `"String!"`, `"Int!"`, `"[String]!"`
+-   [Recommended] A String representation of a type: `"String!"`, `"Int!"`, `"[String]!"`
     (note the exclamation mark at the end, as required by the [GraphQL specs](http://graphql.org/).
 
 For objects defined with the legacy `#define` api, testing `:property`, `:hash_key` and _metadata_ is also possible by chaining `.with_property`, `.with_hash_key` and `.with_metadata`. For example:
@@ -35,31 +34,22 @@ For objects defined with the legacy `#define` api, testing `:property`, `:hash_k
 
 ## Examples
 
-Given a `GraphQL::ObjectType` defined as
+Given a GraphQL object defined as
 
 ```ruby
-
-PostType = GraphQL::ObjectType.define do
-  name "Post"
+class PostType < GraphQL::Schema::Object
+  graphql_name "Post"
   description "A blog post"
 
-  interfaces [GraphQL::Relay::Node.interface]
+  implements GraphQL::Relay::Node.interface
 
-  field :id, !types.ID,
-             property: :post_id
+  field :id, ID, null: false
+  field :comments, [String], null: false
+  field :isPublished, Boolean, null: true
 
-  field :comments,
-        !types[types.String],
-        hash_key: :post_comments
-
-  field :isPublished,
-        admin_only: true
-
-  field :subposts, PostType do
-    type !PostType
-
-    argument :filter, types.String
-    argument :id, types.ID
+  field :subposts, PostType, null: true do
+    argument :filter, types.String, required: false
+    argument :id, types.ID, required: false
   end
 end
 ```
@@ -68,13 +58,11 @@ end
 
 ```ruby
 describe PostType do
-  it 'defines a field id of type ID!' do
-    expect(subject).to have_field(:id).that_returns(!types.ID)
-  end
+  subject { described_class }
 
-  # Fluent alternatives
-  it { is_expected.to have_field(:id).of_type("ID!") }
-  it { is_expected.to have_a_field(:id).returning("ID!") }
+  it { is_expected.to have_field(:id).of_type(!types.ID) }
+  it { is_expected.to have_field(:comments).of_type("[String!]!") }
+  it { is_expected.to have_field(:isPublished).of_type("Boolean") }
 end
 ```
 
@@ -92,80 +80,54 @@ describe PostType do
   describe 'subposts' do
     subject { PostType.fields['subposts'] }
 
-    # You can use your type object directly when building expectations
-    it 'has type PostType' do
-      expect(subject).to be_of_type(!PostType)
-    end
-
-    # Or as usual, a literal String
-    it { is_expected.to be_of_type('Post!') }
+    it { is_expected.to be_of_type('Post') }
   end
 end
 ```
 
-Keep in mind that when using strings as type expectation you have to use the
-type name (`Post`) and not the constant name (`PostType`).
-
-Using your type objects directly is riskier than the string representation, since
-renaming the graphql name of an object is potentially a breaking change that
-wouldn't get caught by your test suite.
-
-You can also use the built-in [graphql-ruby](https://github.com/rmosolgo/graphql-ruby) scalar types:
+### 3) For objects defined using the legacy `#define` api, you can also use `with_property`, `with_hash_key` and `with_metadata`:
 
 ```ruby
-# ensure you have the GraphQL type definer available in your tests
-types = GraphQL::Define::TypeDefiner.instance
+PostTypeWithDefineApi = GraphQL::ObjectType.define do
+  name "DefinedPost"
 
-describe PostType do
-  describe 'comments' do
-    subject { PostType.fields['comments'] }
-    it { is_expected.to be_of_type(!types[types.String]) }
-    it { is_expected.to be_of_type('[String]!') }
-  end
+  interfaces [GraphQL::Relay::Node.interface]
+
+  field :id, !types.ID, property: :post_id
+  field :comments, !types[types.String], hash_key: :post_comments
+  field :isPublished, admin_only: true
 end
-```
 
-### 3) Test a specific field with `with_property`, `with_hash_key` and `with_metadata`
-
-```ruby
-describe PostType do
-  it { is_expected.to have_a_field(:id).with_property(:post_id) }
+describe PostTypeWithDefineApi do
+  it { is_expected.to have_a_field(:id).of_type('ID!').with_property(:post_id) }
   it { is_expected.to have_a_field(:comments).with_hash_key(:post_comments) }
   it { is_expected.to have_a_field(:isPublished).with_metadata(admin_only: true) }
 end
 ```
 
-### 4) Test the arguments accepted by a field with `accept_arguments` matcher:
+### 4) Test the arguments accepted by a field with `accept_argument` matcher:
 
 ```ruby
 describe PostType do
   describe 'subposts' do
     subject { PostType.fields['subposts'] }
 
-    let(:a_whole_bunch_of_args) do
-      { filter: 'String', id: types.Int, pippo: 'Float', posts: PostType }
-    end
-
     it 'accepts a filter and an id argument, of types String and ID' do
-      expect(subject).to accept_arguments(filter: types.String, id: types.ID)
+      expect(subject).to accept_argument(:filter).of_type('String')
+      expect(subject).to accept_argument(:id).of_type('ID')
     end
 
-    # You can also test if a field does not accept args. Not quite useful :D.
-    it { is_expected.not_to accept_arguments(a_whole_bunch_of_args) }
+    it { is_expected.not_to accept_argument(:weirdo) }
   end
 end
 ```
-
-The spec will only pass if all attributes/types specified in the hash are
-defined on the field.
-
-For better fluency, `accept_arguments` is also available in singular form, as
-`accept_argument`.
 
 ### 5) Test an object's interface implementations:
 
 ```ruby
 describe PostType do
+  subject { described_class }
+
   it 'implements interface Node' do
     expect(subject).to implement('Node')
   end
@@ -178,6 +140,8 @@ end
 
 ## TODO
 
+-   Support GraphQL 1.9.x;
+-   Check the method used for resolving a field;
 -   New matchers!
 
 ## Contributing

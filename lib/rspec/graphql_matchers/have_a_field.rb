@@ -7,18 +7,10 @@ require_relative './have_a_field_matchers/with_hash_key'
 module RSpec
   module GraphqlMatchers
     class HaveAField < BaseMatcher
-      DESCRIPTIONS = {
-        type: 'of type `%s`',
-        property: 'reading from the `%s` property',
-        hash_key: 'reading from the `%s` hash_key',
-        metadata: 'with metadata `%s`'
-      }.freeze
-
       def initialize(expected_field_name, fields = :fields)
         @expected_field_name = expected_field_name.to_s
         @fields = fields.to_sym
         @expectations = []
-        @descriptions = []
       end
 
       def matches?(graph_object)
