@@ -3,8 +3,8 @@ require_relative 'base_matcher'
 module RSpec
   module GraphqlMatchers
     class Implement < BaseMatcher
-      def initialize(interface_names)
-        @expected = interface_names.map(&:to_s)
+      def initialize(interfaces)
+        @expected = interfaces.map {|interface| interface_name(interface) }
       end
 
       def matches?(graph_object)
@@ -33,13 +33,13 @@ module RSpec
 
       def actual
         if @graph_object.respond_to?(:interfaces)
-          @graph_object.interfaces.map do |interface|
+          return @graph_object.interfaces.map do |interface|
             interface_name(interface)
           end
-        else
-          raise "Invalid object #{@graph_object} provided to #{matcher_name} " \
-            'matcher. It does not seem to be a valid GraphQL object type.'
         end
+
+        raise "Invalid object #{@graph_object} provided to #{matcher_name} " \
+          'matcher. It does not seem to be a valid GraphQL object type.'
       end
 
       def interface_name(interface)
