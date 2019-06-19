@@ -5,6 +5,10 @@ module RSpec
         def description
           "of type `#{expected}`"
         end
+
+        def failure_message
+          "#{description}, but it was `#{type_name(sample.type)}`"
+        end
       end
     end
   end

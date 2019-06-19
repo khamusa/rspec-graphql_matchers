@@ -62,7 +62,7 @@ module RSpec
         base_msg = "expected #{member_name(@graph_object)} " \
           "to define field `#{@expected_field_name}`" \
 
-        return "#{base_msg} #{descriptions.join(', ')}" if @actual_field
+        return "#{base_msg} #{failure_messages.join(', ')}" if @actual_field
 
         "#{base_msg} but no field was found with that name"
       end
@@ -75,6 +75,10 @@ module RSpec
 
       def descriptions
         @results.map(&:description)
+      end
+
+      def failure_messages
+        @results.map(&:failure_message)
       end
 
       def field_collection

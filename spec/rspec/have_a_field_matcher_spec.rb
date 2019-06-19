@@ -10,7 +10,11 @@ module RSpec::GraphqlMatchers
       end
 
       it 'fails when the type does not define the expected field' do
-        expect(a_type).not_to have_a_field(:ids)
+        expect { expect(a_type).to have_a_field(:ids) }
+          .to fail_with(
+            'expected TestObject to define field `ids` but no field was found ' \
+            'with that name'
+          )
       end
 
       it 'fails with a failure message when the type does not define the field' do
@@ -45,13 +49,13 @@ module RSpec::GraphqlMatchers
           expect { expect(a_type).to have_a_field(:id).returning('String!') }
             .to fail_with(
               "expected TestObject to define field `id` " \
-              'of type `String!`'
+              'of type `String!`, but it was `String`'
             )
 
           expect { expect(a_type).to have_a_field('other').returning(!types.Int) }
             .to fail_with(
               "expected TestObject to define field `other` " \
-              'of type `Int!`'
+              'of type `Int!`, but it was `ID!`'
             )
         end
 
@@ -78,7 +82,7 @@ module RSpec::GraphqlMatchers
             expect(a_type).to have_a_field(:other).with_hash_key(:whatever)
           end.to fail_with(
             "expected TestObject to define field `other` " \
-            'with hash key `whatever`'
+            'with hash key `whatever`, but it was `other_on_hash`'
           )
         end
       end
@@ -132,7 +136,8 @@ module RSpec::GraphqlMatchers
           expect { expect(a_type).to have_a_field(:id).with_property(:whatever) }
             .to fail_with(
               "expected TestObject to define field `id`" \
-              ' resolving with property `whatever`'
+              ' resolving with property `whatever`,' \
+              ' but it was `id_on_model`'
             )
         end
       end
@@ -163,7 +168,8 @@ module RSpec::GraphqlMatchers
           expect { expect(a_type).to have_a_field(:id).with_metadata(expected) }
             .to fail_with(
               "expected TestObject to define field `id`" \
-              " with metadata `#{expected.inspect}`"
+              " with metadata `#{expected.inspect}`, but it was" \
+              " `{:foo=>true, :bar=>{:nested=>{:objects=>true, :arrays=>[1, 2, 3]}}}`"
             )
         end
       end

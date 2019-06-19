@@ -10,10 +10,13 @@ module RSpec
       end
 
       def types_match?(actual_type, expected_type)
-        actual_type = actual_type.to_graphql if actual_type.respond_to?(:to_graphql)
-        expected_type = expected_type.to_graphql if expected_type.respond_to?(:to_graphql)
+        expected_type.nil? || type_name(expected_type) == type_name(actual_type)
+      end
 
-        expected_type.nil? || expected_type.to_s == actual_type.to_s
+      def type_name(a_type)
+        a_type = a_type.to_graphql if a_type.respond_to?(:to_graphql)
+
+        a_type.to_s
       end
     end
   end

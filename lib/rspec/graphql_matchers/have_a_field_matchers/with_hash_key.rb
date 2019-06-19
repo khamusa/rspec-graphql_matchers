@@ -11,7 +11,12 @@ module RSpec
         end
 
         def matches?(actual_field)
-          get_hash_key(actual_field) == @expected_hash_key.to_sym
+          @actual_hash_key = get_hash_key(actual_field)
+          @actual_hash_key == @expected_hash_key.to_sym
+        end
+
+        def failure_message
+          "#{description}, but it was `#{@actual_hash_key}`"
         end
 
         private

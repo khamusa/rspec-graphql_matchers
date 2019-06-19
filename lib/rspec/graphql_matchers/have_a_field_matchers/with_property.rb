@@ -11,7 +11,12 @@ module RSpec
         end
 
         def matches?(actual_field)
-          actual_field.property.to_sym == @expected_property_name.to_sym
+          @actual_property = actual_field.property.to_sym
+          @actual_property == @expected_property_name.to_sym
+        end
+
+        def failure_message
+          "#{description}, but it was `#{@actual_property}`"
         end
       end
     end
