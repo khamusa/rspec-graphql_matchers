@@ -37,27 +37,27 @@ module RSpec::GraphqlMatchers
       describe '.that_returns(a_type)' do
         it 'passes when the type defines the field with correct type as ' \
           'strings' do
-          expect(a_type).to have_a_field(:id).that_returns('String')
-          expect(a_type).to have_a_field('other').that_returns('ID!')
+          expect(a_type).to have_a_field(:id).that_returns('ID!')
+          expect(a_type).to have_a_field('other').that_returns('String')
         end
 
         it 'passes when the type defines the field with correct type as ' \
           'graphql objects' do
-          expect(a_type).to have_a_field(:id).that_returns(types.String)
-          expect(a_type).to have_a_field('other').of_type('ID!')
+          expect(a_type).to have_a_field(:id).that_returns('ID!')
+          expect(a_type).to have_a_field('other').of_type(types.String)
         end
 
         it 'fails when the type defines a field of the wrong type' do
-          expect { expect(a_type).to have_a_field(:id).returning('String!') }
+          expect { expect(a_type).to have_a_field(:id).returning('ID') }
             .to fail_with(
               'expected TestObject to define field `id` ' \
-              'of type `String!`, but it was `String`'
+              'of type `ID`, but it was `ID!`'
             )
 
           expect { expect(a_type).to have_a_field('other').returning(!types.Int) }
             .to fail_with(
               'expected TestObject to define field `other` ' \
-              'of type `Int!`, but it was `ID!`'
+              'of type `Int!`, but it was `String`'
             )
         end
 
@@ -95,13 +95,32 @@ module RSpec::GraphqlMatchers
         Class.new(GraphQL::Schema::Object) do
           graphql_name 'TestObject'
 
-          field :id, types.String, null: true
-
-          field :other, types.ID, hash_key: :other_on_hash, null: false
+          field :id, types.ID, null: false
+          field :other, types.String, hash_key: :other_on_hash, null: true
         end
       end
 
       include_examples 'have a field'
+
+      context 'with fields defined by implementing an interface' do
+        subject(:a_type) do
+          actual_interface = Module.new do
+            include GraphQL::Schema::Interface
+            graphql_name 'ActualInterface'
+
+            field :other, types.String, hash_key: :other_on_hash, null: true
+          end
+
+          Class.new(GraphQL::Schema::Object) do
+            graphql_name 'TestObject'
+
+            implements actual_interface
+            implements GraphQL::Relay::Node.interface
+          end
+        end
+
+        include_examples 'have a field'
+      end
     end
 
     context 'with legacy DSL api' do
@@ -110,13 +129,13 @@ module RSpec::GraphqlMatchers
           name 'TestObject'
 
           field :id,
-                types.String,
+                !types.ID,
                 property: :id_on_model,
                 foo: true,
                 bar: { nested: { objects: true, arrays: [1, 2, 3] } }
 
           field :other,
-                !types.ID,
+                types.String,
                 hash_key: :other_on_hash
         end
       end

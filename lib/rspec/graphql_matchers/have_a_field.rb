@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'base_matcher'
 require_relative './have_a_field_matchers/of_type'
 require_relative './have_a_field_matchers/with_property'
@@ -19,8 +21,8 @@ module RSpec
         @actual_field = field_collection[@expected_field_name]
         return false if @actual_field.nil?
 
-        @results = @expectations.select do |matcher|
-          !matcher.matches?(@actual_field)
+        @results = @expectations.reject do |matcher|
+          matcher.matches?(@actual_field)
         end
 
         @results.empty?

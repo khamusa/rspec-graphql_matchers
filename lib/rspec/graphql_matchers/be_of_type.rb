@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'base_matcher'
 require 'pry'
 
@@ -11,7 +13,7 @@ module RSpec
       end
 
       def matches?(actual_sample)
-        @sample = actual_sample
+        @sample = to_graphql(actual_sample)
         sample.respond_to?(:type) && types_match?(sample.type, @expected)
       end
 
@@ -22,6 +24,14 @@ module RSpec
 
       def description
         "be of type '#{expected}'"
+      end
+
+      private
+
+      def to_graphql(field_sample)
+        return field_sample unless field_sample.respond_to?(:to_graphql)
+
+        field_sample.to_graphql
       end
     end
   end
