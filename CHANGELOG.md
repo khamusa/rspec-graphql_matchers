@@ -8,6 +8,12 @@
 
 ### Bug fixes
 
+## 1.0.1 (June 22th, 2019)
+
+### Bug fixes
+
+-   Fixed issue causing `have_a_field(x).of_type(Y)` to fail on fields defined on implemented interfaces that were defined with legacy syntax.
+
 ## 1.0 (June, 2019)
 
 ### Breaking changes
