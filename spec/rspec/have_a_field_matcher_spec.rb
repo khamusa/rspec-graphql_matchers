@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module RSpec::GraphqlMatchers
@@ -20,7 +22,7 @@ module RSpec::GraphqlMatchers
       it 'fails with a failure message when the type does not define the field' do
         expect { expect(a_type).to have_a_field(:ids) }
           .to fail_with(
-            "expected TestObject to define field `ids` but no field " \
+            'expected TestObject to define field `ids` but no field ' \
             'was found with that name'
           )
       end
@@ -48,19 +50,19 @@ module RSpec::GraphqlMatchers
         it 'fails when the type defines a field of the wrong type' do
           expect { expect(a_type).to have_a_field(:id).returning('String!') }
             .to fail_with(
-              "expected TestObject to define field `id` " \
+              'expected TestObject to define field `id` ' \
               'of type `String!`, but it was `String`'
             )
 
           expect { expect(a_type).to have_a_field('other').returning(!types.Int) }
             .to fail_with(
-              "expected TestObject to define field `other` " \
+              'expected TestObject to define field `other` ' \
               'of type `Int!`, but it was `ID!`'
             )
         end
 
         context 'when an invalid type is passed' do
-          let(:a_type) { Hash.new }
+          let(:a_type) { {} }
 
           it 'fails with a Runtime error' do
             expect { expect(a_type).to have_a_field(:id) }
@@ -81,7 +83,7 @@ module RSpec::GraphqlMatchers
           expect do
             expect(a_type).to have_a_field(:other).with_hash_key(:whatever)
           end.to fail_with(
-            "expected TestObject to define field `other` " \
+            'expected TestObject to define field `other` ' \
             'with hash key `whatever`, but it was `other_on_hash`'
           )
         end
@@ -108,14 +110,14 @@ module RSpec::GraphqlMatchers
           name 'TestObject'
 
           field :id,
-            types.String,
-            property: :id_on_model,
-            foo: true,
-            bar: { nested: { objects: true, arrays: [1, 2, 3] } }
+                types.String,
+                property: :id_on_model,
+                foo: true,
+                bar: { nested: { objects: true, arrays: [1, 2, 3] } }
 
           field :other,
-            !types.ID,
-            hash_key: :other_on_hash
+                !types.ID,
+                hash_key: :other_on_hash
         end
       end
 
@@ -135,7 +137,7 @@ module RSpec::GraphqlMatchers
         it 'fails when the property is incorrect' do
           expect { expect(a_type).to have_a_field(:id).with_property(:whatever) }
             .to fail_with(
-              "expected TestObject to define field `id`" \
+              'expected TestObject to define field `id`' \
               ' resolving with property `whatever`,' \
               ' but it was `id_on_model`'
             )
@@ -159,17 +161,16 @@ module RSpec::GraphqlMatchers
           is_expected.to have_a_field(:id).with_metadata(expected)
         end
 
-        it 'fais when the metadata is incorrect' do
-          actual = a_type.fields['id'].metadata
+        it 'fails when the metadata is incorrect' do
           expected = {
             foo: false,
             bar: { nested: { objects: false, arrays: [2, 3, 1] } }
           }
           expect { expect(a_type).to have_a_field(:id).with_metadata(expected) }
             .to fail_with(
-              "expected TestObject to define field `id`" \
+              'expected TestObject to define field `id`' \
               " with metadata `#{expected.inspect}`, but it was" \
-              " `{:foo=>true, :bar=>{:nested=>{:objects=>true, :arrays=>[1, 2, 3]}}}`"
+              ' `{:foo=>true, :bar=>{:nested=>{:objects=>true, :arrays=>[1, 2, 3]}}}`'
             )
         end
       end
