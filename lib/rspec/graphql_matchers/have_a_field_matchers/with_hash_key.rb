@@ -23,11 +23,10 @@ module RSpec
 
         def get_hash_key(actual_field)
           if actual_field.respond_to?(:hash_key)
-            return actual_field.hash_key.to_sym
+            return actual_field.hash_key.to_sym if actual_field.hash_key
           end
 
-          # Class-based api
-          actual_field.method_sym
+          actual_field.metadata[:type_class].method_sym
         end
       end
     end
