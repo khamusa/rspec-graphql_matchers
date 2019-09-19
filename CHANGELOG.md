@@ -8,6 +8,10 @@
 
 ### Bug fixes
 
+## 1.1 (Sep 19th, 2019)
+
+-   Added graphql-ruby 1.9.x support (thanks to @severin)
+
 ## 1.0.1 (June 22th, 2019)
 
 ### Bug fixes
