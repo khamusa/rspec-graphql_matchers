@@ -4,3 +4,9 @@ rvm:
   - 2.3.1
 before_install: gem install bundler -v 1.12.3
 script: bundle exec rspec
+matrix:
+  include:
+    - name: "GraphQL 1.9.x"
+      env: GRAPHQL_GEM_VERSION=1.9
+    - name: "GraphQL 1.8.x"
+      env: GRAPHQL_GEM_VERSION=1.8
