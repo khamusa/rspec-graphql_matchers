@@ -19,6 +19,7 @@ module RSpec
         @graph_object = graph_object
 
         @actual_field = field_collection[@expected_field_name]
+        @actual_field = @actual_field.to_graphql if @actual_field.respond_to?(:to_graphql)
         return false if @actual_field.nil?
 
         @results = @expectations.reject do |matcher|
