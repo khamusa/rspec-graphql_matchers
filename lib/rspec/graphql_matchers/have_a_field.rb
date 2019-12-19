@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'graphql/schema/member/build_type'
 require_relative 'base_matcher'
 require_relative './have_a_field_matchers/of_type'
 require_relative './have_a_field_matchers/with_property'
