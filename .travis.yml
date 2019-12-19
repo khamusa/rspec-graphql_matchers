@@ -2,9 +2,7 @@ sudo: false
 language: ruby
 rvm:
   - 2.3.1
-before_install:
-  - gem install bundler -v 1.12.3
-  - bundle _1.12.3_ install
+before_install: gem install bundler -v 1.12.3
 script: bundle exec rspec
 matrix:
   include:
