@@ -11,6 +11,14 @@ module RSpec::GraphqlMatchers
         expect(a_type).to have_a_field(:id)
       end
 
+      it 'passes with the underscored field name' do
+        expect(a_type).to have_a_field(:is_test)
+      end
+
+      it 'passes with the camel cased field name' do
+        expect(a_type).to have_a_field(:isTest)
+      end
+
       it 'fails when the type does not define the expected field' do
         expect { expect(a_type).to have_a_field(:ids) }
           .to fail_with(
@@ -39,12 +47,16 @@ module RSpec::GraphqlMatchers
           'strings' do
           expect(a_type).to have_a_field(:id).that_returns('ID!')
           expect(a_type).to have_a_field('other').that_returns('String')
+          expect(a_type).to have_a_field(:is_test).of_type('Boolean')
+          expect(a_type).to have_a_field(:isTest).of_type('Boolean')
         end
 
         it 'passes when the type defines the field with correct type as ' \
           'graphql objects' do
           expect(a_type).to have_a_field(:id).that_returns('ID!')
           expect(a_type).to have_a_field('other').of_type(types.String)
+          expect(a_type).to have_a_field(:is_test).of_type(types.Boolean)
+          expect(a_type).to have_a_field(:isTest).of_type(types.Boolean)
         end
 
         it 'fails when the type defines a field of the wrong type' do
@@ -97,6 +109,7 @@ module RSpec::GraphqlMatchers
 
           field :id, types.ID, null: false
           field :other, types.String, hash_key: :other_on_hash, null: true
+          field :is_test, types.Boolean, null: true
         end
       end
 
@@ -109,6 +122,7 @@ module RSpec::GraphqlMatchers
             graphql_name 'ActualInterface'
 
             field :other, types.String, hash_key: :other_on_hash, null: true
+            field :is_test, types.Boolean, null: true
           end
 
           Class.new(GraphQL::Schema::Object) do
@@ -137,6 +151,8 @@ module RSpec::GraphqlMatchers
           field :other,
                 types.String,
                 hash_key: :other_on_hash
+
+          field :isTest, types.Boolean
         end
       end
 
