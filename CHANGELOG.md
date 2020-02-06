@@ -8,6 +8,10 @@
 
 ### Bug fixes
 
+## 1.2 (Feb 6th, 2020)
+
+-   Added support to underscored arguments in have_field (https://github.com/khamusa/rspec-graphql_matchers/pull/29 thanks to @makketagg)
+
 ## 1.1 (Sep 19th, 2019)
 
 -   Added graphql-ruby 1.9.x support (thanks to @severin)
