@@ -10,7 +10,7 @@ module RSpec
   module GraphqlMatchers
     class HaveAField < BaseMatcher
       def initialize(expected_field_name, fields = :fields)
-        @expected_field_name = expected_field_name.to_s
+        @expected_field_name = GraphQL::Schema::Member::BuildType.camelize(expected_field_name.to_s)
         @fields = fields.to_sym
         @expectations = []
       end
