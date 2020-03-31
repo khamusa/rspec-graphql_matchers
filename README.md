@@ -63,6 +63,10 @@ describe PostType do
   it { is_expected.to have_field(:id).of_type(!types.ID) }
   it { is_expected.to have_field(:comments).of_type("[String!]!") }
   it { is_expected.to have_field(:isPublished).of_type("Boolean") }
+
+  # The gem automatically converts field names to CamelCase, so this will
+  # pass even though the field was defined as field :isPublished
+  it { is_expected.to have_field(:is_published).of_type("Boolean") }
 end
 ```
 
@@ -138,10 +142,45 @@ describe PostType do
 end
 ```
 
+### 6) Using camelize: false on field names
+
+By default the graphql gem camelizes field names. This gem deals with it transparently:
+
+```ruby
+class ObjectMessingWithCamelsAndSnakesType < GraphQL::Schema::Object
+  graphql_name 'ObjectMessingWithCamelsAndSnakes'
+
+  implements GraphQL::Relay::Node.interface
+
+  field :me_gusta_los_camellos, ID, null: false
+
+  # note the camelize: false
+  field :prefiero_serpientes, ID, null: false, camelize: false
+end
+```
+
+The following specs demonstrate the current behavior of the gem regarding fields:
+
+```ruby
+describe ObjectMessingWithCamelsAndSnakesType do
+  subject { described_class }
+
+  # For a field name that was automatically camelized, you can add expectations
+  # against both versions and we handle it transparently:
+  it { is_expected.to have_a_field(:meGustaLosCamellos) }
+  it { is_expected.to have_a_field(:me_gusta_los_camellos) }
+
+  # However, when using camelize: false, you have to use the exact case of the field definition:
+  it { is_expected.to have_a_field(:prefiero_serpientes) }
+  it { is_expected.not_to have_a_field(:prefieroSerpientes) } # Note we're using `not_to`
+end
+```
+
+This behaviour is currently active only on field name matching. PRs are welcome to
+reproduce it to arguments as well.
+
 ## TODO
 
--   Support GraphQL 1.9.x;
--   Check the method used for resolving a field;
 -   New matchers!
 
 ## Contributing
