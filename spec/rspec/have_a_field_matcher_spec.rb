@@ -19,6 +19,10 @@ module RSpec::GraphqlMatchers
         expect(a_type).to have_a_field(:isTest)
       end
 
+      it 'matches a non camelized field with the underscored field name' do
+        expect(a_type).to have_a_field(:not_camelized)
+      end
+
       it 'fails when the type does not define the expected field' do
         expect { expect(a_type).to have_a_field(:ids) }
           .to fail_with(
@@ -110,6 +114,7 @@ module RSpec::GraphqlMatchers
           field :id, types.ID, null: false
           field :other, types.String, hash_key: :other_on_hash, null: true
           field :is_test, types.Boolean, null: true
+          field :not_camelized, types.String, null: false, camelize: false
         end
       end
 
@@ -123,6 +128,7 @@ module RSpec::GraphqlMatchers
 
             field :other, types.String, hash_key: :other_on_hash, null: true
             field :is_test, types.Boolean, null: true
+            field :not_camelized, types.String, null: false, camelize: false
           end
 
           Class.new(GraphQL::Schema::Object) do
@@ -153,6 +159,8 @@ module RSpec::GraphqlMatchers
                 hash_key: :other_on_hash
 
           field :isTest, types.Boolean
+
+          field :not_camelized, types.String, camelize: false
         end
       end
 

@@ -10,7 +10,10 @@ module RSpec
   module GraphqlMatchers
     class HaveAField < BaseMatcher
       def initialize(expected_field_name, fields = :fields)
-        @expected_field_name = GraphQL::Schema::Member::BuildType.camelize(expected_field_name.to_s)
+        @expected_field_name = expected_field_name.to_s
+        @expected_camel_field_name = GraphQL::Schema::Member::BuildType.camelize(
+          @expected_field_name
+        )
         @fields = fields.to_sym
         @expectations = []
       end
@@ -18,12 +21,10 @@ module RSpec
       def matches?(graph_object)
         @graph_object = graph_object
 
-        @actual_field = field_collection[@expected_field_name]
-        @actual_field = @actual_field.to_graphql if @actual_field.respond_to?(:to_graphql)
-        return false if @actual_field.nil?
+        return false if actual_field.nil?
 
         @results = @expectations.reject do |matcher|
-          matcher.matches?(@actual_field)
+          matcher.matches?(actual_field)
         end
 
         @results.empty?
@@ -57,7 +58,7 @@ module RSpec
         base_msg = "expected #{member_name(@graph_object)} " \
           "to define field `#{@expected_field_name}`" \
 
-        return "#{base_msg} #{failure_messages.join(', ')}" if @actual_field
+        return "#{base_msg} #{failure_messages.join(', ')}" if actual_field
 
         "#{base_msg} but no field was found with that name"
       end
@@ -67,6 +68,15 @@ module RSpec
       end
 
       private
+
+      def actual_field
+        @actual_field ||= begin
+          field = field_collection[@expected_field_name]
+          field ||= field_collection[@expected_camel_field_name]
+
+          field.respond_to?(:to_graphql) ? field.to_graphql : field
+        end
+      end
 
       def descriptions
         @results.map(&:description)

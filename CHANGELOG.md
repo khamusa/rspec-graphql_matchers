@@ -8,6 +8,10 @@
 
 ### Bug fixes
 
+## 1.2.1 (March 31st, 2020)
+
+-   Fixed issue causing the last release to break expectations against snake_cased fields (fixes https://github.com/khamusa/rspec-graphql_matchers/issues/30).
+
 ## 1.2 (Feb 6th, 2020)
 
 -   Added support to underscored arguments in have_field (https://github.com/khamusa/rspec-graphql_matchers/pull/29 thanks to @makketagg)
