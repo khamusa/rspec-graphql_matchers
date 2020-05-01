@@ -22,6 +22,24 @@ describe 'expect(a_field).to accept_arguments(arg_name: arg_type, ...)' do
 
           it { is_expected.not_to accept_arguments(expected_args) }
         end
+
+        context 'when the expected argument is camelcase' do
+          let(:expected_args) { { isTest: types.Boolean } }
+
+          it { is_expected.to accept_arguments(expected_args) }
+        end
+
+        context 'when the expected argument is underscored' do
+          let(:expected_args) { { is_test: types.Boolean } }
+
+          it { is_expected.to accept_arguments(expected_args) }
+
+          context 'when the actual argument is not camelized' do
+            let(:expected_args) { { not_camelized: types.Boolean } }
+
+            it { is_expected.to accept_arguments(expected_args) }
+          end
+        end
       end
 
       context 'when expecting multiple arguments with type' do
@@ -122,6 +140,8 @@ describe 'expect(a_field).to accept_arguments(arg_name: arg_type, ...)' do
         argument :id, !types.ID
         argument :name, !types.String
         argument :age, types.Int
+        argument :isTest, types.Boolean
+        argument :not_camelized, types.Boolean
       end
     end
 
@@ -136,6 +156,8 @@ describe 'expect(a_field).to accept_arguments(arg_name: arg_type, ...)' do
         argument :id, GraphQL::Types::ID, required: true
         argument :name, GraphQL::Types::String, required: true
         argument :age, GraphQL::Types::Int, required: false
+        argument :is_test, GraphQL::Types::Boolean, required: false
+        argument :not_camelized, GraphQL::Types::Boolean, required: false, camelize: false
       end
     end
 
