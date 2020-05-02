@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require_relative 'base_matcher'
 
 module RSpec
   module GraphqlMatchers
     class Implement < BaseMatcher
       def initialize(interfaces)
-        @expected = interfaces.map {|interface| interface_name(interface) }
+        @expected = interfaces.map { |interface| interface_name(interface) }
       end
 
       def matches?(graph_object)

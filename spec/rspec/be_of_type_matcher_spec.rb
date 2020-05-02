@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'expect(a_field).to be_of_type(graphql_type)' do
