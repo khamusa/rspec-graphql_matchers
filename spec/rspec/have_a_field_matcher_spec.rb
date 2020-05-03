@@ -104,6 +104,60 @@ module RSpec::GraphqlMatchers
           )
         end
       end
+
+      describe '.with_deprecation_reason' do
+        context 'when the field has a deprecation reason' do
+          let(:deprecated_field) { :deprecated_field }
+
+          context 'with an expected deprecation reason' do
+            it 'passes when the deprecation reasons match' do
+              expect(a_type).to have_a_field(deprecated_field)
+                .with_deprecation_reason('deprecated')
+            end
+
+            it 'fails when the deprecation reasons do not match' do
+              expect do
+                expect(a_type).to have_a_field(deprecated_field)
+                  .with_deprecation_reason('different deprecation reason')
+              end.to fail_with(
+                'expected TestObject to define field `deprecated_field` with ' \
+                'deprecation reason `different deprecation reason`, ' \
+                'but it was `deprecated`'
+              )
+            end
+          end
+
+          context 'without an expected deprecation reason' do
+            it 'passes' do
+              expect(a_type).to have_a_field(deprecated_field).with_deprecation_reason
+            end
+          end
+        end
+
+        context 'when the field does not have a deprecation reason' do
+          let(:non_deprecated_field) { :id }
+
+          it 'fails without an expected deprecation reason' do
+            expect do
+              expect(a_type).to have_a_field(non_deprecated_field)
+                .with_deprecation_reason
+            end.to fail_with(
+              'expected TestObject to define field `id` with a deprecation reason, ' \
+              'but it was not deprecated'
+            )
+          end
+
+          it 'fails with an expected deprecation reason' do
+            expect do
+              expect(a_type).to have_a_field(non_deprecated_field)
+                .with_deprecation_reason('deprecated')
+            end.to fail_with(
+              'expected TestObject to define field `id` with deprecation reason `deprecated`, ' \
+              'but it was not deprecated'
+            )
+          end
+        end
+      end
     end
 
     context 'using the new class-based api' do
@@ -115,6 +169,8 @@ module RSpec::GraphqlMatchers
           field :other, types.String, hash_key: :other_on_hash, null: true
           field :is_test, types.Boolean, null: true
           field :not_camelized, types.String, null: false, camelize: false
+          field :deprecated_field, types.String, null: true,
+                                                 deprecation_reason: 'deprecated'
         end
       end
 
@@ -129,6 +185,8 @@ module RSpec::GraphqlMatchers
             field :other, types.String, hash_key: :other_on_hash, null: true
             field :is_test, types.Boolean, null: true
             field :not_camelized, types.String, null: false, camelize: false
+            field :deprecated_field, types.String, null: true,
+                                                   deprecation_reason: 'deprecated'
           end
 
           Class.new(GraphQL::Schema::Object) do
@@ -161,6 +219,8 @@ module RSpec::GraphqlMatchers
           field :isTest, types.Boolean
 
           field :not_camelized, types.String, camelize: false
+
+          field :deprecated_field, types.String, deprecation_reason: 'deprecated'
         end
       end
 

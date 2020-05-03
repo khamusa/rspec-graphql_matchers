@@ -5,6 +5,7 @@ require_relative './have_a_field_matchers/of_type'
 require_relative './have_a_field_matchers/with_property'
 require_relative './have_a_field_matchers/with_metadata'
 require_relative './have_a_field_matchers/with_hash_key'
+require_relative './have_a_field_matchers/with_deprecation_reason'
 
 module RSpec
   module GraphqlMatchers
@@ -51,6 +52,11 @@ module RSpec
 
       def with_metadata(expected_metadata)
         @expectations << HaveAFieldMatchers::WithMetadata.new(expected_metadata)
+        self
+      end
+
+      def with_deprecation_reason(expected_reason = nil)
+        @expectations << HaveAFieldMatchers::WithDeprecationReason.new(expected_reason)
         self
       end
 
