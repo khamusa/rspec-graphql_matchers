@@ -17,12 +17,16 @@ module RSpec
         end
 
         @expected_arg_name = expected_arg_name.to_s
+        @expected_camel_arg_name = GraphQL::Schema::Member::BuildType.camelize(
+          @expected_arg_name
+        )
       end
 
       def matches?(graph_object)
         @graph_object = graph_object
 
         @actual_argument = field_arguments[@expected_arg_name]
+        @actual_argument ||= field_arguments[@expected_camel_arg_name]
         return false if @actual_argument.nil?
 
         @results = @expectations.select do |matcher|

@@ -9,6 +9,18 @@ module RSpec::GraphqlMatchers
         expect(a_type).to accept_argument(:id)
       end
 
+      it 'passes with the underscored argument name' do
+        expect(a_type).to accept_argument(:is_test)
+      end
+
+      it 'passes with the camel cased argument name' do
+        expect(a_type).to accept_argument(:isTest)
+      end
+
+      it 'matches a non camelized argument with the underscored argument name' do
+        expect(a_type).to accept_argument(:not_camelized)
+      end
+
       it 'fails when the type does not define the expected field' do
         expect { expect(a_type).to accept_argument(:ids) }
           .to fail_with(
@@ -89,6 +101,8 @@ module RSpec::GraphqlMatchers
 
           argument :id, GraphQL::Types::String, required: false
           argument :other, GraphQL::Types::ID, required: true
+          argument :is_test, GraphQL::Types::Boolean, required: false
+          argument :not_camelized, GraphQL::Types::Boolean, required: false, camelize: false
         end
       end
 
@@ -102,6 +116,8 @@ module RSpec::GraphqlMatchers
 
           argument :id, types.String
           argument :other, !types.ID
+          argument :isTest, types.Boolean
+          argument :not_camelized, types.Boolean
         end
       end
 
