@@ -46,10 +46,12 @@ class PostType < GraphQL::Schema::Object
   field :id, ID, null: false
   field :comments, [String], null: false
   field :isPublished, Boolean, null: true
+  field :published, Boolean, null: false, deprecation_reason: 'Use isPublished instead'
 
   field :subposts, PostType, null: true do
     argument :filter, types.String, required: false
     argument :id, types.ID, required: false
+    argument :isPublished, types.Boolean, required: false
   end
 end
 ```
@@ -63,6 +65,12 @@ describe PostType do
   it { is_expected.to have_field(:id).of_type(!types.ID) }
   it { is_expected.to have_field(:comments).of_type("[String!]!") }
   it { is_expected.to have_field(:isPublished).of_type("Boolean") }
+
+  # Check a field is deprecated
+  it { is_expected.to have_field(:published).with_deprecation_reason }
+  it { is_expected.to have_field(:published).with_deprecation_reason('Use isPublished instead') }
+  it { is_expected.not_to have_field(:published).with_deprecation_reason('Wrong reason') }
+  it { is_expected.not_to have_field(:isPublished).with_deprecation_reason }
 
   # The gem automatically converts field names to CamelCase, so this will
   # pass even though the field was defined as field :isPublished
@@ -122,6 +130,10 @@ describe PostType do
     end
 
     it { is_expected.not_to accept_argument(:weirdo) }
+
+    # The gem automatically converts argument names to CamelCase, so this will
+    # pass even though the argument was defined as :isPublished
+    it { is_expected.to accept_argument(:is_published).of_type("Boolean") }
   end
 end
 ```

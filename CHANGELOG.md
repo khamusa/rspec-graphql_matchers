@@ -1,12 +1,9 @@
 # Changelog
 
-### Breaking changes
+## 1.3.0 (May 7th, 2020)
 
-### Deprecations
-
-### New features
-
-### Bug fixes
+-   `accept_argument` matcher accepts underscored argument names and passes even if the actual argument is camel-cased (https://github.com/khamusa/rspec-graphql_matchers/pull/32 thanks to @TonyArra);
+-   `have_a_field` matcher accepts `.with_deprecation_reason` (https://github.com/khamusa/rspec-graphql_matchers/pull/34 thanks to @TonyArra).
 
 ## 1.2.1 (March 31st, 2020)
 
