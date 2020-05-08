@@ -3,7 +3,17 @@ language: ruby
 rvm:
   - 2.3.1
 before_install: gem install bundler -v 1.12.3
-script: bundle exec rspec
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+script:
+  - bundle exec rspec
+after_script:
+  - ./cc-test-reporter after-build --debug --exit-code $TRAVIS_TEST_RESULT
+env:
+  global:
+    - CC_TEST_REPORTER_ID=91869d10400b3eee773709d6227175890affe42c1c50b9cd9cc964e1cb76f93e
 matrix:
   include:
     - name: "GraphQL 1.9.x"
