@@ -2,31 +2,28 @@ AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
 
-Style/Documentation:
-  Enabled: false
-
-Style/ClassAndModuleChildren:
-  EnforcedStyle: compact
-
-Style/MultilineMethodCallIndentation:
-  EnforcedStyle: indented
-
-Style/AlignParameters:
+Layout/AlignParameters:
   EnforcedStyle: with_fixed_indentation
 
-Style/ClassAndModuleChildren:
-  Enabled: false
+Metrics/LineLength:
+  Max: 90
 
-Style/SpaceBeforeFirstArg:
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/SpaceBeforeFirstArg:
   Include:
     - db/migrate/*.rb
   Enabled: false
 
-Style/Lambda:
+Style/Documentation:
   Enabled: false
 
-Metrics/LineLength:
-  Max: 90
+Style/ClassAndModuleChildren:
+  Enabled: true
+
+Style/Lambda:
+  Enabled: false
 
 Metrics/MethodLength:
   Max: 15

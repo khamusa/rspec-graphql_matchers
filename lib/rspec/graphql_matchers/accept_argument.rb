@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'base_matcher'
 require_relative './have_a_field_matchers/of_type'
 
@@ -29,8 +31,8 @@ module RSpec
         @actual_argument ||= field_arguments[@expected_camel_arg_name]
         return false if @actual_argument.nil?
 
-        @results = @expectations.select do |matcher|
-          !matcher.matches?(@actual_argument)
+        @results = @expectations.reject do |matcher|
+          matcher.matches?(@actual_argument)
         end
 
         @results.empty?
