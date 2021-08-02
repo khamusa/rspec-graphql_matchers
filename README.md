@@ -1,4 +1,4 @@
-![Build Status](https://travis-ci.org/khamusa/rspec-graphql_matchers.svg?branch=master)
+![RSpec Status](https://github.com/khamusa/rspec-graphql_matchers/actions/workflows/rspec/badge.svg)
 
 # Rspec::GraphqlMatchers
 
