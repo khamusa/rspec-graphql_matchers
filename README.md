@@ -1,4 +1,4 @@
-![RSpec Status](https://github.com/khamusa/rspec-graphql_matchers/actions/workflows/rspec/badge.svg)
+![RSpec Status](https://github.com/khamusa/rspec-graphql_matchers/actions/workflows/rspec.yml/badge.svg)
 
 # Rspec::GraphqlMatchers
 
