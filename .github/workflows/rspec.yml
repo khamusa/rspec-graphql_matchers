@@ -1,0 +1,41 @@
+name: RSpec
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on: [ push, pull_request ]
+
+jobs:
+  # This workflow contains a single job "rspec"
+  rspec:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ruby_version: [ 2.6, 2.7, 3.0 ]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby ${{ matrix.ruby_version }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby_version }}
+
+      - name: Install gems
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+
+      - name: Cache gems
+        uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-${{ matrix.ruby_version }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.ruby_version }}-gems-
+      
+      - name: Run RSpec
+        run: bundle exec rspec
