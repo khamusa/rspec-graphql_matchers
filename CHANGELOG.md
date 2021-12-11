@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.3.1 (Aug 2nd, 2021)
+-   Corrected gem dependencies so it properly requires RSpec when loaded (thanks to @itay-grudev)
+
 ## 1.3.0 (May 7th, 2020)
 
 -   `accept_argument` matcher accepts underscored argument names and passes even if the actual argument is camel-cased (https://github.com/khamusa/rspec-graphql_matchers/pull/32 thanks to @TonyArra);
