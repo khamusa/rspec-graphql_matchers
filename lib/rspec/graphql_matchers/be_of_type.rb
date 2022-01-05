@@ -28,9 +28,9 @@ module RSpec
       private
 
       def to_graphql(field_sample)
-        return field_sample unless field_sample.respond_to?(:to_graphql)
+        return field_sample unless field_sample.respond_to?(:to_type_signature)
 
-        field_sample.to_graphql
+        field_sample.to_type_signature
       end
     end
   end
