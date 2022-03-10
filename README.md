@@ -207,6 +207,15 @@ This project is intended to be a safe, welcoming space for collaboration, and
 contributors are expected to adhere to the
 [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
+## Testing
+
+```
+gem install diff-lcs
+bundle install
+```
+
+Run tests!
+
 ## License
 
 The gem is available as open source under the terms of the
