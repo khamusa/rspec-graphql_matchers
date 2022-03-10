@@ -2,6 +2,7 @@
 
 require_relative 'base_matcher'
 require_relative './have_a_field_matchers/of_type'
+require_relative './have_a_field_matchers/with_deprecation_reason'
 
 module RSpec
   module GraphqlMatchers
@@ -40,6 +41,11 @@ module RSpec
 
       def of_type(expected_field_type)
         @expectations << HaveAFieldMatchers::OfType.new(expected_field_type)
+        self
+      end
+
+      def with_deprecation_reason(expected_reason = nil)
+        @expectations << HaveAFieldMatchers::WithDeprecationReason.new(expected_reason)
         self
       end
 
