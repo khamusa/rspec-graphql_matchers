@@ -80,7 +80,7 @@ module RSpec
           field = field_collection[@expected_field_name]
           field ||= field_collection[@expected_camel_field_name]
 
-          field.respond_to?(:to_graphql) ? field.to_graphql : field
+          field.respond_to?(:to_type_signature) ? field.to_type_signature : field
         end
       end
 
