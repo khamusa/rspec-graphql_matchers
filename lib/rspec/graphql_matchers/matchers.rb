@@ -6,6 +6,7 @@ require 'rspec/graphql_matchers/accept_arguments'
 require 'rspec/graphql_matchers/accept_argument'
 require 'rspec/graphql_matchers/have_a_field'
 require 'rspec/graphql_matchers/implement'
+require 'rspec/graphql_matchers/return_graphql_error'
 
 module RSpec
   module Matchers
@@ -40,6 +41,10 @@ module RSpec
 
     def implement(*interface_names)
       RSpec::GraphqlMatchers::Implement.new(interface_names.flatten)
+    end
+
+    def return_graphql_error(expected_error_message)
+      RSpec::GraphqlMatchers::ReturnGraphqlError.new(expected_error_message)
     end
   end
 end
