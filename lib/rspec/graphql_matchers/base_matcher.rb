@@ -16,7 +16,7 @@ module RSpec
       end
 
       def type_name(a_type)
-        a_type = a_type.to_graphql if a_type.respond_to?(:to_graphql)
+        a_type = a_type.to_type_signature if a_type.respond_to?(:to_type_signature)
 
         a_type.to_s
       end
