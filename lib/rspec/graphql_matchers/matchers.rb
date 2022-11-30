@@ -43,8 +43,8 @@ module RSpec
       RSpec::GraphqlMatchers::Implement.new(interface_names.flatten)
     end
 
-    def return_graphql_error(expected_error_message)
-      RSpec::GraphqlMatchers::ReturnGraphqlError.new(expected_error_message)
+    def return_graphql_error(expected)
+      RSpec::GraphqlMatchers::ReturnGraphqlError.new(expected)
     end
   end
 end
