@@ -21,11 +21,9 @@ The matchers currently supported are:
 -   `expect(a_field).to be_of_type(valid_type)`
 -   `expect(an_input).to accept_argument(argument_name).of_type(valid_type)`
 
-Where a valid type for the expectation is either:
+Where `valid_type` is a your type signature as a String: `"String!"`, `"Int!"`, `"[String]!"` (note the exclamation mark at the end, as required by the [GraphQL specifications](http://graphql.org/).
 
--   A reference to the actual type you expect;
--   [Recommended] A String representation of a type: `"String!"`, `"Int!"`, `"[String]!"`
-    (note the exclamation mark at the end, as required by the [GraphQL specifications](http://graphql.org/).
+Please note that using references to type instances is deprecated and will be removed in a future release.
 
 ## Examples
 
@@ -123,8 +121,6 @@ describe PostType do
     expect(subject).to implement('Node')
   end
 
-  # Accepts arguments as an array and type objects directly
-  it { is_expected.to implement(GraphQL::Types::Relay::Node) }
   it { is_expected.not_to implement('OtherInterface') }
 end
 ```

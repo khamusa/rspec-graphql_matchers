@@ -68,7 +68,7 @@ module RSpec
 
         it 'passes when the type defines the field with correct type as ' \
           'graphql objects' do
-          expect(a_type).to accept_argument(:id).of_type(types.String)
+          expect(a_type).to accept_argument(:id).of_type(GraphQL::Types::String)
           expect(a_type).to accept_argument('other').of_type('ID!')
         end
 
