@@ -106,10 +106,22 @@ module RSpec
             argument :is_test, GraphQL::Types::Boolean, required: false
             argument :not_camelized, GraphQL::Types::Boolean, required: false,
                                                               camelize: false
+            argument :deprecated_argument, types.String, required: false,
+                                                         deprecation_reason: 'deprecated'
+
           end
         end
 
         include_examples 'accept argument'
+
+        describe '.with_deprecation_reason' do
+          let(:deprecated_argument) { :deprecated_argument }
+
+          it 'passes when the deprecation reasons match' do
+            expect(a_type).to accept_argument(deprecated_argument)
+              .with_deprecation_reason('deprecated')
+          end
+        end
       end
 
       context 'with legacy DSL api' do

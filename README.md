@@ -52,6 +52,7 @@ class PostType < GraphQL::Schema::Object
     argument :filter, types.String, required: false
     argument :id, types.ID, required: false
     argument :isPublished, types.Boolean, required: false
+    argument :published, types.String, required: false, deprecation_reason: 'Use isPublished instead'
   end
 end
 ```
@@ -128,6 +129,9 @@ describe PostType do
       expect(subject).to accept_argument(:filter).of_type('String')
       expect(subject).to accept_argument(:id).of_type('ID')
     end
+
+    # Check a argument is deprecated
+    it { is_expected.to accept_argument(:published).with_deprecation_reason }
 
     it { is_expected.not_to accept_argument(:weirdo) }
 
@@ -206,6 +210,15 @@ reproduce it to arguments as well.
 This project is intended to be a safe, welcoming space for collaboration, and
 contributors are expected to adhere to the
 [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+
+## Testing
+
+```
+gem install diff-lcs
+bundle install
+```
+
+Run tests!
 
 ## License
 
