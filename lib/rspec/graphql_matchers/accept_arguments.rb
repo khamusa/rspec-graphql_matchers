@@ -40,7 +40,7 @@ module RSpec
 
       def describe_arguments(what_args)
         what_args.sort.map do |arg_name, arg_type|
-          "#{arg_name}(#{arg_type})"
+          "#{arg_name}(#{type_name(arg_type)})"
         end.join(', ')
       end
     end

@@ -6,17 +6,16 @@ module RSpec
   module GraphqlMatchers
     describe 'expect(a_type).to have_an_input_field(field_name)' \
              '.that_returns(a_type)' do
-      subject(:a_type) do
-        types_to_define = type_fields
-        GraphQL::Relay::Mutation.define do
-          name 'TestObject'
 
-          types_to_define.each do |fname, ftype|
-            input_field fname, ftype
-          end
+      subject(:a_type) do
+        Class.new(GraphQL::Schema::RelayClassicMutation) do
+          graphql_name 'TestObject'
+
+
+          argument :id, GraphQL::Types::String, required: false
+          argument :other, GraphQL::Types::ID, required: true
         end
       end
-      let(:type_fields) { { 'id' => types.String, 'other' => !types.ID } }
 
       it { is_expected.to have_an_input_field(:id) }
 
@@ -31,7 +30,7 @@ module RSpec
       it 'fails with a failure message when the type does not define the field' do
         expect { expect(a_type).to have_an_input_field(:ids) }
           .to fail_with(
-            "expected #{a_type.name} to define field `ids` but no field was " \
+            "expected #{a_type.graphql_name} to define field `ids` but no field was " \
             'found with that name'
           )
       end
@@ -50,21 +49,21 @@ module RSpec
 
       it 'passes when the type defines the field with correct type as graphql ' \
          'objects' do
-        expect(a_type).to have_an_input_field(:id).that_returns(types.String)
-        expect(a_type).to have_an_input_field('other').that_returns(!types.ID)
+        expect(a_type).to have_an_input_field(:id).that_returns(GraphQL::Types::String)
+        expect(a_type).to have_an_input_field('other').that_returns(GraphQL::Types::ID.to_non_null_type)
       end
 
       it 'fails when the type defines a field of the wrong type' do
         expect { expect(a_type).to have_an_input_field(:id).returning('String!') }
           .to fail_with(
-            "expected #{a_type.name} to define field `id` of type `String!`, " \
+            "expected #{a_type.graphql_name} to define field `id` of type `String!`, " \
             'but it was `String`'
           )
 
         expect do
-          expect(a_type).to have_an_input_field('other').returning(!types.Int)
+          expect(a_type).to have_an_input_field('other').returning(GraphQL::Types::Int.to_non_null_type)
         end.to fail_with(
-          "expected #{a_type.name} to define field `other` of type `Int!`, " \
+          "expected #{a_type.graphql_name} to define field `other` of type `Int!`, " \
           'but it was `ID!`'
         )
       end

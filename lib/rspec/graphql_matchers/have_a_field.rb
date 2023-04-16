@@ -103,9 +103,8 @@ module RSpec
 
       def matcher_name
         case @fields
-        when :fields        then 'have_a_field'
-        when :input_fields  then 'have_an_input_field'
-        when :return_fields then 'have_a_return_field'
+        when :fields then 'have_a_field'
+        when :arguments then 'have_an_input_field'
         end
       end
 

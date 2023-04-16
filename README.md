@@ -44,9 +44,9 @@ class PostType < GraphQL::Schema::Object
   field :published, Boolean, null: false, deprecation_reason: 'Use isPublished instead'
 
   field :subposts, PostType, null: true do
-    argument :filter, types.String, required: false
-    argument :id, types.ID, required: false
-    argument :isPublished, types.Boolean, required: false
+    argument :filter, String, required: false
+    argument :id, ID, required: false
+    argument :isPublished, Boolean, required: false
   end
 end
 ```
@@ -57,7 +57,7 @@ end
 describe PostType do
   subject { described_class }
 
-  it { is_expected.to have_field(:id).of_type(!types.ID) }
+  it { is_expected.to have_field(:id).of_type("ID!") }
   it { is_expected.to have_field(:comments).of_type("[String!]!") }
   it { is_expected.to have_field(:isPublished).of_type("Boolean") }
 
