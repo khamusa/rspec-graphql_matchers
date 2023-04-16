@@ -14,9 +14,6 @@ Gem::Specification.new do |spec|
   spec.homepage = 'https://github.com/khamusa/rspec-graphql_matchers'
   spec.license = 'MIT'
 
-  # raise 'RubyGems 2.0 or newer is required to protect against public gem ' \
-  #       'pushes.'
-
   spec.files =
     `git ls-files -z`
       .split("\x0")
