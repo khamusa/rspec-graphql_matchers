@@ -59,11 +59,11 @@ module RSpec
       private
 
       def descriptions
-        @results.map(&:description)
+        results.map(&:description)
       end
 
       def failure_messages
-        @results.map(&:failure_message)
+        results.map(&:failure_message)
       end
 
       def field_arguments
@@ -73,6 +73,10 @@ module RSpec
           raise "Invalid object #{@graph_object} provided to accept_argument " \
             'matcher. It does not seem to be a valid GraphQL object type.'
         end
+      end
+
+      def results
+        @results ||= []
       end
     end
   end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'pry'
 require 'simplecov'
 SimpleCov.start
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)

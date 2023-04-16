@@ -85,11 +85,11 @@ module RSpec
       end
 
       def descriptions
-        @results.map(&:description)
+        results.map(&:description)
       end
 
       def failure_messages
-        @results.map(&:failure_message)
+        results.map(&:failure_message)
       end
 
       def field_collection
@@ -107,6 +107,10 @@ module RSpec
         when :input_fields  then 'have_an_input_field'
         when :return_fields then 'have_a_return_field'
         end
+      end
+
+      def results
+        @results ||= []
       end
     end
   end
