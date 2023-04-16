@@ -17,7 +17,7 @@ module RSpec
       end
 
       def failure_message
-        "expected field '#{member_name(sample)}' to be of type '#{expected}', " \
+        "expected field '#{member_name(sample)}' to be of type '#{type_name(expected)}', " \
         "but it was '#{type_name(sample.type)}'"
       end
 
