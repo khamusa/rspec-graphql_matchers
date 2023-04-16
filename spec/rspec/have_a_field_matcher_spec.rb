@@ -161,123 +161,43 @@ module RSpec
         end
       end
 
-      context 'using the new class-based api' do
-        subject(:a_type) do
-          Class.new(GraphQL::Schema::Object) do
-            graphql_name 'TestObject'
+      subject(:a_type) do
+        Class.new(GraphQL::Schema::Object) do
+          graphql_name 'TestObject'
 
-            field :id, types.ID, null: false
+          field :id, types.ID, null: false
+          field :other, types.String, hash_key: :other_on_hash, null: true
+          field :is_test, types.Boolean, null: true
+          field :not_camelized, types.String, null: false, camelize: false
+          field :deprecated_field, types.String, null: true,
+                                                  deprecation_reason: 'deprecated'
+        end
+      end
+
+      include_examples 'have a field'
+
+      context 'with fields defined by implementing an interface' do
+        subject(:a_type) do
+          actual_interface = Module.new do
+            include GraphQL::Schema::Interface
+            graphql_name 'ActualInterface'
+
             field :other, types.String, hash_key: :other_on_hash, null: true
             field :is_test, types.Boolean, null: true
             field :not_camelized, types.String, null: false, camelize: false
             field :deprecated_field, types.String, null: true,
-                                                   deprecation_reason: 'deprecated'
+                                                    deprecation_reason: 'deprecated'
+          end
+
+          Class.new(GraphQL::Schema::Object) do
+            graphql_name 'TestObject'
+
+            implements actual_interface
+            implements GraphQL::Relay::Node.interface
           end
         end
 
         include_examples 'have a field'
-
-        context 'with fields defined by implementing an interface' do
-          subject(:a_type) do
-            actual_interface = Module.new do
-              include GraphQL::Schema::Interface
-              graphql_name 'ActualInterface'
-
-              field :other, types.String, hash_key: :other_on_hash, null: true
-              field :is_test, types.Boolean, null: true
-              field :not_camelized, types.String, null: false, camelize: false
-              field :deprecated_field, types.String, null: true,
-                                                     deprecation_reason: 'deprecated'
-            end
-
-            Class.new(GraphQL::Schema::Object) do
-              graphql_name 'TestObject'
-
-              implements actual_interface
-              implements GraphQL::Relay::Node.interface
-            end
-          end
-
-          include_examples 'have a field'
-        end
-      end
-
-      context 'with legacy DSL api' do
-        subject(:a_type) do
-          GraphQL::ObjectType.define do
-            name 'TestObject'
-
-            field :id,
-                  !types.ID,
-                  property: :id_on_model,
-                  foo: true,
-                  bar: { nested: { objects: true, arrays: [1, 2, 3] } }
-
-            field :other,
-                  types.String,
-                  hash_key: :other_on_hash
-
-            field :isTest, types.Boolean
-
-            field :not_camelized, types.String, camelize: false
-
-            field :deprecated_field, types.String, deprecation_reason: 'deprecated'
-          end
-        end
-
-        before do
-          GraphQL::Field.accepts_definitions(
-            foo: GraphQL::Define.assign_metadata_key(:foo),
-            bar: GraphQL::Define.assign_metadata_key(:bar)
-          )
-        end
-
-        include_examples 'have a field'
-
-        describe '.with_property(property_name)' do
-          it { is_expected.to have_a_field(:id).with_property(:id_on_model) }
-          it { is_expected.to have_a_field(:id).with_property('id_on_model') }
-
-          it 'fails when the property is incorrect' do
-            expect { expect(a_type).to have_a_field(:id).with_property(:whatever) }
-              .to fail_with(
-                'expected TestObject to define field `id`' \
-                ' resolving with property `whatever`,' \
-                ' but it was `id_on_model`'
-              )
-          end
-        end
-
-        describe '.with_metadata(metadata)' do
-          it do
-            expected = {
-              foo: true,
-              bar: { nested: { objects: true, arrays: [1, 2, 3] } }
-            }
-            is_expected.to have_a_field(:id).with_metadata(expected)
-          end
-
-          it 'matches when the object keys are not in the same order' do
-            expected = {
-              bar: { nested: { arrays: [1, 2, 3], objects: true } },
-              foo: true
-            }
-            is_expected.to have_a_field(:id).with_metadata(expected)
-          end
-
-          it 'fails when the metadata is incorrect' do
-            expected = {
-              foo: false,
-              bar: { nested: { objects: false, arrays: [2, 3, 1] } }
-            }
-            expect { expect(a_type).to have_a_field(:id).with_metadata(expected) }
-              .to fail_with(
-                'expected TestObject to define field `id`' \
-                " with metadata `#{expected.inspect}`, but it was" \
-                ' `{:foo=>true, :bar=>{:nested=>{:objects=>true, :arrays=>[1, 2, 3]}}}`'
-              )
-          end
-        end
       end
     end
   end
