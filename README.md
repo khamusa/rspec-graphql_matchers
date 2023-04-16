@@ -25,7 +25,7 @@ Where a valid type for the expectation is either:
 
 -   A reference to the actual type you expect;
 -   [Recommended] A String representation of a type: `"String!"`, `"Int!"`, `"[String]!"`
-    (note the exclamation mark at the end, as required by the [GraphQL specs](http://graphql.org/).
+    (note the exclamation mark at the end, as required by the [GraphQL specifications](http://graphql.org/).
 
 For objects defined with the legacy `#define` api, testing `:property`, `:hash_key` and _metadata_ is also possible by chaining `.with_property`, `.with_hash_key` and `.with_metadata`. For example:
 
