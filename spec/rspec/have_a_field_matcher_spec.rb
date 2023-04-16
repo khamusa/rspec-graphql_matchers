@@ -193,7 +193,7 @@ module RSpec
             graphql_name 'TestObject'
 
             implements actual_interface
-            implements GraphQL::Relay::Node.interface
+            implements GraphQL::Types::Relay::Node
           end
         end
 
