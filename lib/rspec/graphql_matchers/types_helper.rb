@@ -5,7 +5,6 @@ require 'graphql'
 module RSpec
   module GraphqlMatchers
     module TypesHelper
-
       class << self
         extend Gem::Deprecate
 
