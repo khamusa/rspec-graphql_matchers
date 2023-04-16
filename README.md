@@ -41,7 +41,7 @@ class PostType < GraphQL::Schema::Object
   graphql_name "Post"
   description "A blog post"
 
-  implements GraphQL::Relay::Node.interface
+  implements GraphQL::Types::Relay::Node
 
   field :id, ID, null: false
   field :comments, [String], null: false
@@ -103,7 +103,7 @@ end
 PostTypeWithDefineApi = GraphQL::ObjectType.define do
   name "DefinedPost"
 
-  interfaces [GraphQL::Relay::Node.interface]
+  interfaces [GraphQL::Types::Relay::Node]
 
   field :id, !types.ID, property: :post_id
   field :comments, !types[types.String], hash_key: :post_comments
@@ -149,7 +149,7 @@ describe PostType do
   end
 
   # Accepts arguments as an array and type objects directly
-  it { is_expected.to implement(GraphQL::Relay::Node.interface) }
+  it { is_expected.to implement(GraphQL::Types::Relay::Node) }
   it { is_expected.not_to implement('OtherInterface') }
 end
 ```
@@ -162,7 +162,7 @@ By default the graphql gem camelizes field names. This gem deals with it transpa
 class ObjectMessingWithCamelsAndSnakesType < GraphQL::Schema::Object
   graphql_name 'ObjectMessingWithCamelsAndSnakes'
 
-  implements GraphQL::Relay::Node.interface
+  implements GraphQL::Types::Relay::Node
 
   field :me_gusta_los_camellos, ID, null: false
 

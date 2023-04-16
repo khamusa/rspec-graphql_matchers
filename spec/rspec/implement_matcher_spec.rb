@@ -26,9 +26,9 @@ module RSpec
         it { is_expected.to implement(['Node']) }
         it { is_expected.to implement(['AnInterface']) }
         it { is_expected.to implement(%w[Node AnInterface]) }
-        it { is_expected.to implement(GraphQL::Relay::Node.interface, AnInterface) }
+        it { is_expected.to implement(GraphQL::Types::Relay::Node, AnInterface) }
         it do
-          is_expected.to implement([GraphQL::Relay::Node.interface, AnInterface])
+          is_expected.to implement([GraphQL::Types::Relay::Node, AnInterface])
         end
 
         it { is_expected.not_to implement('AnotherInterface') }
@@ -70,7 +70,7 @@ module RSpec
           GraphQL::ObjectType.define do
             name 'TestObject'
             interfaces [
-              GraphQL::Relay::Node.interface,
+              GraphQL::Types::Relay::Node,
               AnInterface,
               a_class_based_interface
             ]
@@ -85,7 +85,7 @@ module RSpec
           Class.new(GraphQL::Schema::Object) do
             graphql_name 'TestObject'
 
-            implements GraphQL::Relay::Node.interface
+            implements GraphQL::Types::Relay::Node
             implements AnInterface
             implements a_class_based_interface
           end
