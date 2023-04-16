@@ -28,7 +28,11 @@ module RSpec
             return actual_field.hash_key.to_sym if actual_field.hash_key
           end
 
-          actual_field.metadata[:type_class].method_sym
+          if actual_field.respond_to?(:metadata)
+            return actual_field.metadata[:type_class].method_sym
+          end
+
+          actual_field.method_sym
         end
       end
     end
