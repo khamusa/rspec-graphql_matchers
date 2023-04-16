@@ -3,28 +3,38 @@
 require 'spec_helper'
 
 describe 'expect(a_field).to be_of_type(graphql_type)' do
-  scalar_types = [types.Boolean, types.Int, types.Float, types.String, types.ID]
-  list_types   = scalar_types.map { |t| types[t] }
-  all_types    = scalar_types + scalar_types.map(&:'!') + list_types.map(&:'!')
+  scalar_types = {
+    "Boolean" => GraphQL::Types::Boolean,
+    "Int" => GraphQL::Types::Int,
+    "Float" => GraphQL::Types::Float,
+    "String" => GraphQL::Types::String,
+    "ID" => GraphQL::Types::ID
+  }
 
-  all_types.each do |scalar_type|
-    context "when the field has type #{scalar_type}" do
+  non_nullable_scalar_types = scalar_types.each_with_object({}) do |(string_name, type), result|
+    result["#{string_name}!"] = type.to_non_null_type
+  end
+
+  all_types = scalar_types.merge(non_nullable_scalar_types)
+
+  all_types.each do |(graphql_name, scalar_type)|
+    context "when the field has type #{graphql_name}" do
       subject(:field) { double('GrahQL Field', type: field_type) }
       let(:field_type) { scalar_type }
 
-      it "matches a graphQL type object representing #{scalar_type}" do
+      it "matches a graphQL type object representing #{graphql_name}" do
         expect(field).to be_of_type(scalar_type)
       end
 
-      it "matches the string '#{scalar_type}'" do
-        expect(field).to be_of_type(scalar_type.to_s)
+      it "matches the string '#{graphql_name}'" do
+        expect(field).to be_of_type(graphql_name)
       end
 
-      it "does not match the string '#{scalar_type.to_s.downcase}'" do
-        expect(field).not_to be_of_type(scalar_type.to_s.downcase)
+      it "does not match the string '#{graphql_name.downcase}'" do
+        expect(field).not_to be_of_type(graphql_name.downcase)
       end
 
-      scalar_types.each do |another_scalar|
+      scalar_types.each do |(another_graphql_name, another_scalar)|
         next if another_scalar == scalar_type
 
         context "when matching against the type #{another_scalar}" do
@@ -42,7 +52,7 @@ describe 'expect(a_field).to be_of_type(graphql_type)' do
 
             it 'informs the expected and actual types' do
               expect(failure_message).to end_with(
-                "to be of type '#{expected_type}', but it was '#{field.type}'"
+                "to be of type '#{another_graphql_name}', but it was '#{graphql_name}'"
               )
             end
 
