@@ -5,7 +5,7 @@ module RSpec
     module HaveAFieldMatchers
       class OfType < RSpec::GraphqlMatchers::BeOfType
         def description
-          "of type `#{expected}`"
+          "of type `#{type_name(expected)}`"
         end
 
         def failure_message

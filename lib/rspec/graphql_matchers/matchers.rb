@@ -28,12 +28,12 @@ module RSpec
     alias have_field have_a_field
 
     def have_an_input_field(field_name)
-      RSpec::GraphqlMatchers::HaveAField.new(field_name, :input_fields)
+      RSpec::GraphqlMatchers::HaveAField.new(field_name, :arguments)
     end
     alias have_input_field have_an_input_field
 
     def have_a_return_field(field_name)
-      RSpec::GraphqlMatchers::HaveAField.new(field_name, :return_fields)
+      RSpec::GraphqlMatchers::HaveAField.new(field_name)
     end
     alias have_return_field have_a_return_field
     # rubocop:enable Naming/PredicateName

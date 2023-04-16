@@ -68,7 +68,7 @@ module RSpec
 
         it 'passes when the type defines the field with correct type as ' \
           'graphql objects' do
-          expect(a_type).to accept_argument(:id).of_type(types.String)
+          expect(a_type).to accept_argument(:id).of_type(GraphQL::Types::String)
           expect(a_type).to accept_argument('other').of_type('ID!')
         end
 
@@ -79,13 +79,13 @@ module RSpec
               'of type `String!`, but it was `String`'
             )
 
-          expect { expect(a_type).to accept_argument('other').of_type(!types.Int) }
+          expect { expect(a_type).to accept_argument('other').of_type(GraphQL::Types::Int.to_non_null_type) }
             .to fail_with(
               'expected TestObject to accept argument `other` ' \
               'of type `Int!`, but it was `ID!`'
             )
 
-          expect { expect(a_type).to accept_argument('other' => !types.Int) }
+          expect { expect(a_type).to accept_argument('other' => GraphQL::Types::Int.to_non_null_type) }
             .to fail_with(
               'expected TestObject to accept argument `other` ' \
               'of type `Int!`, but it was `ID!`'

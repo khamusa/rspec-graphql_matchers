@@ -1,5 +1,32 @@
 # Changelog
 
+## 2.0.0 (April 16th, 2023)
+
+-   Adds compatibility with graphql-ruby 2.0+. If you're still using an earlier version, you should stick to 1.4.x.
+
+### Deprecations
+
+-   The usage of the `#types` helper when writing tests (if you're not including `RSpec::GraphqlMatchers::TypesHelper` anywhere, you shoudn't have to change anything). Use `GraphQL::Types::<TYPE_NAME>` instead
+-   The usage of type instances as expected value for a type comparison is deprecated. Instead,
+    use the string that represents the type specification. Examples:
+
+    ```
+      # Bad - These are deprecated:
+      expect(a_type).to have_a_field(:lorem).of_type(GraphQL::Types::ID)
+      expect(a_type).to have_a_field(:lorem).of_type(Types::MyCustomType)
+
+      # Good - Use these instead
+      expect(a_type).to have_a_field(:lorem).of_type('ID')
+      expect(a_type).to have_a_field(:lorem).of_type('MyCustomType')
+    ```
+
+    The reason behind this change relies on the fact that we should have a decoupling between the
+    internal constants used to define our API and the public names exposed through it. If we test
+    a published API using the internal constants, it is possible to perform breaking changes by
+    renaming the graphql names of our types or entities without actually breaking the tests.
+
+    If we're performing a breaking change to a public API, we want our tests to fail.
+
 ## 1.4.0 (April 16th, 2023)
 
 -   Removal of deprecated calls to #to_graphql, replacing them with #to_type_signature that was added in graphql-ruby 1.8.3 (https://github.com/khamusa/rspec-graphql_matchers/pull/43 @RobinDaugherty)

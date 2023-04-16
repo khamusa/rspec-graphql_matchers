@@ -59,9 +59,9 @@ module RSpec
           it 'passes when the type defines the field with correct type as ' \
             'graphql objects' do
             expect(a_type).to have_a_field(:id).that_returns('ID!')
-            expect(a_type).to have_a_field('other').of_type(types.String)
-            expect(a_type).to have_a_field(:is_test).of_type(types.Boolean)
-            expect(a_type).to have_a_field(:isTest).of_type(types.Boolean)
+            expect(a_type).to have_a_field('other').of_type(GraphQL::Types::String)
+            expect(a_type).to have_a_field(:is_test).of_type(GraphQL::Types::Boolean)
+            expect(a_type).to have_a_field(:isTest).of_type(GraphQL::Types::Boolean)
           end
 
           it 'fails when the type defines a field of the wrong type' do
@@ -71,7 +71,8 @@ module RSpec
                 'of type `ID`, but it was `ID!`'
               )
 
-            expect { expect(a_type).to have_a_field('other').returning(!types.Int) }
+            expect { expect(a_type).to have_a_field('other')
+              .returning(GraphQL::Types::Int.to_non_null_type) }
               .to fail_with(
                 'expected TestObject to define field `other` ' \
                 'of type `Int!`, but it was `String`'
@@ -165,11 +166,11 @@ module RSpec
         Class.new(GraphQL::Schema::Object) do
           graphql_name 'TestObject'
 
-          field :id, types.ID, null: false
-          field :other, types.String, hash_key: :other_on_hash, null: true
-          field :is_test, types.Boolean, null: true
-          field :not_camelized, types.String, null: false, camelize: false
-          field :deprecated_field, types.String, null: true,
+          field :id, GraphQL::Types::ID, null: false
+          field :other, GraphQL::Types::String, hash_key: :other_on_hash, null: true
+          field :is_test, GraphQL::Types::Boolean, null: true
+          field :not_camelized, GraphQL::Types::String, null: false, camelize: false
+          field :deprecated_field, GraphQL::Types::String, null: true,
                                                   deprecation_reason: 'deprecated'
         end
       end
@@ -182,10 +183,10 @@ module RSpec
             include GraphQL::Schema::Interface
             graphql_name 'ActualInterface'
 
-            field :other, types.String, hash_key: :other_on_hash, null: true
-            field :is_test, types.Boolean, null: true
-            field :not_camelized, types.String, null: false, camelize: false
-            field :deprecated_field, types.String, null: true,
+            field :other, GraphQL::Types::String, hash_key: :other_on_hash, null: true
+            field :is_test, GraphQL::Types::Boolean, null: true
+            field :not_camelized, GraphQL::Types::String, null: false, camelize: false
+            field :deprecated_field, GraphQL::Types::String, null: true,
                                                     deprecation_reason: 'deprecated'
           end
 

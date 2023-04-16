@@ -2,6 +2,6 @@
 
 module Rspec
   module GraphqlMatchers
-    VERSION = '1.4.0'.freeze
+    VERSION = '2.0.0-rc.0'.freeze
   end
 end
