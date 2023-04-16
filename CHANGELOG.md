@@ -1,6 +1,17 @@
 # Changelog
 
+## 1.4.0 (April 16th, 2023)
+
+-   Removal of deprecated calls to #to_graphql, replacing them with #to_type_signature that was added in graphql-ruby 1.8.3 (https://github.com/khamusa/rspec-graphql_matchers/pull/43 @RobinDaugherty)
+-   Dropped support for legacy .define API
+-   Dropped support to old relay interfaces
+-   Fixed with_hash_key matcher for newer versions of graphql-ruby
+-   Fixed errors that occured in some edge cases when generating descriptions for accept_argument and have_a_field matchers
+-   Documentations improvement and general cleanup
+-   Dropped support to graphql-ruby versions before 1.10.12.
+
 ## 1.3.1 (Aug 2nd, 2021)
+
 -   Corrected gem dependencies so it properly requires RSpec when loaded (thanks to @itay-grudev)
 
 ## 1.3.0 (May 7th, 2020)
